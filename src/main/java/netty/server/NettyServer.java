@@ -19,7 +19,6 @@ import netty.packets.out.ServerShutdownPacketOUT;
 import netty.utils.Authenticated;
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.InputStreamReader;
 
 public class NettyServer {
@@ -39,7 +38,6 @@ public class NettyServer {
     public NettyServer start() {
         if (port == -1) return this;
         final ServerBootstrap bootstrap = new ServerBootstrap();
-
         bootstrap.group(producer, consumer).channel(EPOLL ? EpollServerSocketChannel.class : NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(final SocketChannel channel) {
@@ -50,10 +48,11 @@ public class NettyServer {
             }
         });
         this.channel = bootstrap.bind(port).syncUninterruptibly().channel();
+        createTables();
         System.out.println("Server started...");
         System.out.println("Enter commands:");
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
+        
         try {
 
             String line;
@@ -62,10 +61,12 @@ public class NettyServer {
                     shutdown();
                     System.out.println("Send Shutdown");
                     return this;
+                }else if(line.toLowerCase().startsWith("hashpass")){
+                    System.out.println(BCrypt.hashpw(line.split(" ")[1], BCrypt.gensalt()));
                 }
+                System.out.println("Enter commands:");
             }
         } catch (Exception ignored) {
-
         }
 
         return this;
@@ -76,5 +77,10 @@ public class NettyServer {
         producer.shutdownGracefully();
         consumer.shutdownGracefully();
         channel.closeFuture().syncUninterruptibly();
+    }
+
+    private void createTables(){
+        sqlUser.createUserTable();
+        sqlUser.createPositionTable();
     }
 }

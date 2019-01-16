@@ -111,7 +111,7 @@ public class SQLUser {
 
                 final ResultSet resultSet = preparedStatement.executeQuery();
 
-                if (!resultSet.next() ||(resultSet.getDouble("latitude") != latitude || resultSet.getDouble("longitude") != longitude)) {
+                if (!resultSet.next() || (resultSet.getDouble("latitude") != latitude || resultSet.getDouble("longitude") != longitude)) {
                     preparedStatement = conn.prepareStatement("INSERT INTO `position` (userID, latitude, longitude) VALUES ((SELECT id FROM `user` WHERE username = ?), ?, ?) ");
                     preparedStatement.setString(1, username);
                     preparedStatement.setDouble(2, latitude);
@@ -129,6 +129,44 @@ public class SQLUser {
             }
         });
     }
+
+
+    public void createUserTable() {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `user` (id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                        "username VARCHAR(100) NOT NULL UNIQUE,"+
+                        "password varchar(100) NOT NULL);").execute();
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
+    public void createPositionTable(){
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `position` (" +
+                        "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                        "`timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL," +
+                        "userID BIGINT UNSIGNED NOT NULL," +
+                        "latitude DOUBLE PRECISION NOT NULL," +
+                        "longitude DOUBLE PRECISION NOT NULL," +
+                        "CONSTRAINT userID_fk FOREIGN KEY (userID) REFERENCES `user`(id));").execute();
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
 
     private void renewConnection() {
         try {

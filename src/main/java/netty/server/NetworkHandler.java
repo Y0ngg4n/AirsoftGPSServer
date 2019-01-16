@@ -10,6 +10,7 @@ import netty.packets.PacketIN;
 import netty.packets.in.AuthPacketIN;
 import netty.packets.in.ClientPositionIN;
 import netty.packets.in.ClientShutdownPacketIN;
+import netty.packets.out.ClientAllPostionsOUT;
 import netty.packets.out.LoginResponsePacketOUT;
 import netty.utils.Authenticated;
 import netty.utils.Logger;
@@ -55,8 +56,10 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             }));
         } else if (packet instanceof ClientPositionIN) {
             final ClientPositionIN clientPositionIN = (ClientPositionIN) packet;
+
             NettyServer.sqlUser.insertPositionIfChanged(clientPositionIN.getUsername(), clientPositionIN.getLatitude(), clientPositionIN.getLongitude());
-            Logger.info("§eGot GPS Data from Client");
+
+            Logger.info("§eGot GPS Data from User: " + clientPositionIN.getUsername());
         }
     }
 }
