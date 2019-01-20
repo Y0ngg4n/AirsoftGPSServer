@@ -1,5 +1,9 @@
 package netty.packets.Authentification;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 import java.math.BigDecimal;
@@ -7,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -137,7 +142,7 @@ public class SQLUser {
         service.execute(() -> {
             try {
                 conn.prepareStatement("CREATE TABLE IF NOT EXISTS `user` (id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-                        "username VARCHAR(100) NOT NULL UNIQUE,"+
+                        "username VARCHAR(100) NOT NULL UNIQUE," +
                         "password varchar(100) NOT NULL);").execute();
             } catch (final SQLException ex) {
                 System.out.println("SQLException: " + ex.getMessage());
@@ -147,7 +152,7 @@ public class SQLUser {
         });
     }
 
-    public void createPositionTable(){
+    public void createPositionTable() {
         renewConnection();
 
         service.execute(() -> {
@@ -167,6 +172,62 @@ public class SQLUser {
         });
     }
 
+    public JsonArray getLatestPositionFromAllUser() {
+        renewConnection();
+        JsonArray jsonArray = new JsonArray();
+        service.execute(() -> {
+            try {
+                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude FROM `position` group by `userID`").executeQuery();
+
+                JsonObject jsonObject = new JsonObject();
+                while (resultSet.next()) {
+                    jsonObject = new JsonObject();
+                    jsonObject.addProperty("timestamp", resultSet.getTimestamp("timestamp").toString());
+                    jsonObject.addProperty("userID", resultSet.getInt("userID"));
+                    jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
+                    jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
+                }
+                jsonArray.add(jsonObject);
+
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+        return jsonArray;
+    }
+
+    private JsonArray getPositionHistoryFromAllUSer() {
+        renewConnection();
+        JsonArray jsonArray = new JsonArray();
+        service.execute(() -> {
+
+                    try {
+                        ResultSet resultSet = conn.prepareStatement("SELECT * FROM `user`").executeQuery();
+
+                        ArrayList<Long> userIDs = new ArrayList<Long>();
+                        while (resultSet.next()) {
+                            userIDs.add(resultSet.getLong("id"));
+                        }
+                        for (long userID : userIDs) {
+                            JsonObject userJsonObject = new JsonObject();
+                            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT latitude, longitde, timestamp FROM `position` where userID = ?");
+                            preparedStatement.setLong(1, userID);
+                            resultSet = preparedStatement.executeQuery();
+                            userJsonObject.addProperty("latitude", resultSet.getLong("latitude"));
+                            userJsonObject.addProperty("longitude", resultSet.getLong("longitude"));
+                            userJsonObject.addProperty("timestamp", resultSet.getTimestamp("timestamp").toString());
+                            userJsonObject.addProperty("userid", userID);
+                            jsonArray.add(userJsonObject);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
+        return jsonArray;
+    }
 
     private void renewConnection() {
         try {

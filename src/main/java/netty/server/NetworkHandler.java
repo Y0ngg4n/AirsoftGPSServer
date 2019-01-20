@@ -59,7 +59,17 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
 
             NettyServer.sqlUser.insertPositionIfChanged(clientPositionIN.getUsername(), clientPositionIN.getLatitude(), clientPositionIN.getLongitude());
 
+            final ClientAllPostionsOUT clientAllPostionsOUT = new ClientAllPostionsOUT(NettyServer.sqlUser.getLatestPositionFromAllUser());
             Logger.info("§eGot GPS Data from User: " + clientPositionIN.getUsername());
+
+            System.out.println(Authenticated.getChannels().size());
+
+             Authenticated.getChannels().forEach(channel1 -> channel1.writeAndFlush(new ClientAllPostionsOUT(NettyServer.sqlUser.getLatestPositionFromAllUser())));
+
+//            for (Channel channell : Authenticated.getChannels()){
+//                channell.writeAndFlush(clientAllPostionsOUT);
+//                Logger.info("§eSending GPS Data to: " + channell.id());
+//            }
         }
     }
 }
