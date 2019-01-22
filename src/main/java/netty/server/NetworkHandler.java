@@ -60,20 +60,20 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
 
             NettyServer.sqlUser.insertPositionIfChanged(clientPositionIN.getUsername(), clientPositionIN.getLatitude(), clientPositionIN.getLongitude());
 
+            NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
+                final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
+                Logger.info("§eGot GPS Data from User: " + clientPositionIN.getUsername());
+                Logger.info("§ejsonarray: " + clientAllPositionsOUT.getJsonArray());
+                Authenticated.getChannels().forEach(channel1 -> channel1.writeAndFlush(clientAllPositionsOUT));
 
-
-            final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(NettyServer.sqlUser.getLatestPositionFromAllUser());
-            Logger.info("§eGot GPS Data from User: " + clientPositionIN.getUsername());
-
-//             Authenticated.getChannels().forEach(channel1 -> channel1.writeAndFlush(new ClientAllPositionsOUT(NettyServer.sqlUser.getLatestPositionFromAllUser())));
-
-            ctx.writeAndFlush(clientAllPositionsOUT);
-
-            Logger.info("§eSending data to client");
-//            for (Channel channell : Authenticated.getChannels()){
-//                channell.writeAndFlush(clientAllPositionsOUT);
-//                Logger.info("§eSending GPS Data to: " + channell.id());
-//            }
+//                ctx.writeAndFlush(clientAllPositionsOUT);
+//
+//                Logger.info("§eSending data to client");
+////            for (Channel channell : Authenticated.getChannels()){
+////                channell.writeAndFlush(clientAllPositionsOUT);
+////                Logger.info("§eSending GPS Data to: " + channell.id());
+////            }
+            });
         }
     }
 }

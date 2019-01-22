@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mysql.cj.jdbc.MysqlDataSource;
+import netty.utils.Logger;
 
 import javax.security.auth.callback.Callback;
 import java.math.BigDecimal;
@@ -172,35 +173,35 @@ public class SQLUser {
         });
     }
 
-    public JsonArray getLatestPositionFromAllUser(final Consumer<JsonArray> callback) {
+    public void getLatestPositionFromAllUser(final Consumer<JsonArray> callback) {
         renewConnection();
 
         try {
             JsonArray jsonArray = new JsonArray();
             ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude FROM `position` group by `userID`").executeQuery();
 
-            JsonObject jsonObject = new JsonObject();
-
             if(!resultSet.next()) callback.accept(null);
 
+            JsonObject jsonObject = null;
             while (resultSet.next()) {
+                Logger.info("having resultsets");
                 jsonObject = new JsonObject();
                 jsonObject.addProperty("timestamp", resultSet.getTimestamp("timestamp").toString());
                 jsonObject.addProperty("userID", resultSet.getInt("userID"));
                 jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
                 jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
+                jsonArray.add(jsonObject);
             }
 
             jsonArray.add(jsonObject);
             callback.accept(jsonArray);
-            return jsonArray;
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
             System.out.println("SQLState: " + e.getSQLState());
             System.out.println("VendorError: " + e.getErrorCode());
 
         }
-        return null;
+        callback.accept(null);
     }
 
 
