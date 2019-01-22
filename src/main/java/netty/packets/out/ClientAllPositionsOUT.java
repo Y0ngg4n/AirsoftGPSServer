@@ -4,11 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import netty.packets.PacketOUT;
 
-public class ClientAllPostionsOUT implements PacketOUT {
+public class ClientAllPositionsOUT implements PacketOUT {
 
     private JsonArray jsonArray;
 
-    public ClientAllPostionsOUT(JsonArray jsonArray) {
+    public ClientAllPositionsOUT(JsonArray jsonArray) {
         this.jsonArray = jsonArray;
     }
 
@@ -20,5 +20,9 @@ public class ClientAllPostionsOUT implements PacketOUT {
     @Override
     public int getId() {
         return 3;
+    }
+
+    public JsonArray getJsonArray() {
+        return jsonArray;
     }
 }

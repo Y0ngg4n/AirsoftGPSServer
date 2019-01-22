@@ -6,14 +6,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mysql.cj.jdbc.MysqlDataSource;
 
+import javax.security.auth.callback.Callback;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public class SQLUser {
@@ -172,31 +172,37 @@ public class SQLUser {
         });
     }
 
-    public JsonArray getLatestPositionFromAllUser() {
+    public JsonArray getLatestPositionFromAllUser(final Consumer<JsonArray> callback) {
         renewConnection();
-        JsonArray jsonArray = new JsonArray();
-        service.execute(() -> {
-            try {
-                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude FROM `position` group by `userID`").executeQuery();
 
-                JsonObject jsonObject = new JsonObject();
-                while (resultSet.next()) {
-                    jsonObject = new JsonObject();
-                    jsonObject.addProperty("timestamp", resultSet.getTimestamp("timestamp").toString());
-                    jsonObject.addProperty("userID", resultSet.getInt("userID"));
-                    jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
-                    jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
-                }
-                jsonArray.add(jsonObject);
+        try {
+            JsonArray jsonArray = new JsonArray();
+            ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude FROM `position` group by `userID`").executeQuery();
 
-            } catch (SQLException e) {
-                System.out.println("SQLException: " + e.getMessage());
-                System.out.println("SQLState: " + e.getSQLState());
-                System.out.println("VendorError: " + e.getErrorCode());
+            JsonObject jsonObject = new JsonObject();
+
+            if(!resultSet.next()) callback.accept(null);
+
+            while (resultSet.next()) {
+                jsonObject = new JsonObject();
+                jsonObject.addProperty("timestamp", resultSet.getTimestamp("timestamp").toString());
+                jsonObject.addProperty("userID", resultSet.getInt("userID"));
+                jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
+                jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
             }
-        });
-        return jsonArray;
+
+            jsonArray.add(jsonObject);
+            callback.accept(jsonArray);
+            return jsonArray;
+        } catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+
+        }
+        return null;
     }
+
 
     private JsonArray getPositionHistoryFromAllUSer() {
         renewConnection();

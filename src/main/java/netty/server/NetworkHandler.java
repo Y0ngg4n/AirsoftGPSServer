@@ -1,16 +1,16 @@
 package netty.server;
 
+import com.google.gson.JsonArray;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import netty.packets.Authentification.Authentificator;
-import netty.packets.Authentification.SQLUser;
 import netty.packets.Authentification.User;
 import netty.packets.PacketIN;
 import netty.packets.in.AuthPacketIN;
 import netty.packets.in.ClientPositionIN;
 import netty.packets.in.ClientShutdownPacketIN;
-import netty.packets.out.ClientAllPostionsOUT;
+import netty.packets.out.ClientAllPositionsOUT;
 import netty.packets.out.LoginResponsePacketOUT;
 import netty.utils.Authenticated;
 import netty.utils.Logger;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
 
@@ -59,15 +60,18 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
 
             NettyServer.sqlUser.insertPositionIfChanged(clientPositionIN.getUsername(), clientPositionIN.getLatitude(), clientPositionIN.getLongitude());
 
-            final ClientAllPostionsOUT clientAllPostionsOUT = new ClientAllPostionsOUT(NettyServer.sqlUser.getLatestPositionFromAllUser());
+
+
+            final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(NettyServer.sqlUser.getLatestPositionFromAllUser());
             Logger.info("§eGot GPS Data from User: " + clientPositionIN.getUsername());
 
-            System.out.println(Authenticated.getChannels().size());
+//             Authenticated.getChannels().forEach(channel1 -> channel1.writeAndFlush(new ClientAllPositionsOUT(NettyServer.sqlUser.getLatestPositionFromAllUser())));
 
-             Authenticated.getChannels().forEach(channel1 -> channel1.writeAndFlush(new ClientAllPostionsOUT(NettyServer.sqlUser.getLatestPositionFromAllUser())));
+            ctx.writeAndFlush(clientAllPositionsOUT);
 
+            Logger.info("§eSending data to client");
 //            for (Channel channell : Authenticated.getChannels()){
-//                channell.writeAndFlush(clientAllPostionsOUT);
+//                channell.writeAndFlush(clientAllPositionsOUT);
 //                Logger.info("§eSending GPS Data to: " + channell.id());
 //            }
         }
