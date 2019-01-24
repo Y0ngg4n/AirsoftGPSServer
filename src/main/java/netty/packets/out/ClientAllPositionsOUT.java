@@ -14,7 +14,7 @@ public class ClientAllPositionsOUT implements PacketOUT {
 
     @Override
     public void write(JsonObject jsonObject) {
-        jsonObject.add("array", jsonArray);
+        jsonObject.add("positions", jsonArray);
     }
 
     @Override

@@ -57,22 +57,15 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             }));
         } else if (packet instanceof ClientPositionIN) {
             final ClientPositionIN clientPositionIN = (ClientPositionIN) packet;
-
+            Logger.debug("Incoming Client Position: lat: " + clientPositionIN.getLatitude() + " long: " + clientPositionIN.getLongitude());
             NettyServer.sqlUser.insertPositionIfChanged(clientPositionIN.getUsername(), clientPositionIN.getLatitude(), clientPositionIN.getLongitude());
 
             NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
                 final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
-                Logger.info("§eGot GPS Data from User: " + clientPositionIN.getUsername());
-                Logger.info("§ejsonarray: " + clientAllPositionsOUT.getJsonArray());
-                Authenticated.getChannels().forEach(channel1 -> channel1.writeAndFlush(clientAllPositionsOUT));
-
-//                ctx.writeAndFlush(clientAllPositionsOUT);
-//
-//                Logger.info("§eSending data to client");
-////            for (Channel channell : Authenticated.getChannels()){
-////                channell.writeAndFlush(clientAllPositionsOUT);
-////                Logger.info("§eSending GPS Data to: " + channell.id());
-////            }
+                for (Channel channel1 : Authenticated.getChannels()) {
+                    channel1.writeAndFlush(clientAllPositionsOUT);
+                    Logger.debug("Packets send to " + channel.id());
+                }
             });
         }
     }

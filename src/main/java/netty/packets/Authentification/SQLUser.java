@@ -178,23 +178,21 @@ public class SQLUser {
 
         try {
             JsonArray jsonArray = new JsonArray();
-            ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude FROM `position` group by `userID`").executeQuery();
-
-            if(!resultSet.next()) callback.accept(null);
+            ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude, username FROM `position` inner join `user` group by `userID`").executeQuery();
 
             JsonObject jsonObject = null;
             while (resultSet.next()) {
-                Logger.info("having resultsets");
                 jsonObject = new JsonObject();
                 jsonObject.addProperty("timestamp", resultSet.getTimestamp("timestamp").toString());
                 jsonObject.addProperty("userID", resultSet.getInt("userID"));
                 jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
                 jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
+                jsonObject.addProperty("username", resultSet.getString("username"));
                 jsonArray.add(jsonObject);
             }
 
-            jsonArray.add(jsonObject);
             callback.accept(jsonArray);
+            return;
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
             System.out.println("SQLState: " + e.getSQLState());
