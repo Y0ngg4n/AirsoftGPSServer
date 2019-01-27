@@ -2,41 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57909a81-b0cf-414b-a0a5-5bcbf9654b57" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/AirsoftGPSServer_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/javaCompile/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/Authentification/Authentificator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/Authentification/BCrypt.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/Authentification/SQLUser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/Authentification/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/PacketDecoder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/PacketEncoder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/PacketIN.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/PacketOUT.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/PacketRegistry.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/in/AuthPacketIN.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/in/ClientPositionIN.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/in/ClientShutdownPacketIN.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/out/LoginResponsePacketOUT.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/packets/out/ServerShutdownPacketOUT.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/server/NettyServer$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/server/NettyServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/server/NetworkHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/utils/Authenticated.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/utils/ByteBuffers.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/utils/Logger$Color.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/netty/utils/Logger.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/utils/Authenticated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/utils/Authenticated.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -197,8 +164,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="624">
-              <caret line="54" column="53" selection-start-line="54" selection-start-column="53" selection-end-line="54" selection-end-column="53" />
+            <state relative-caret-position="-13">
+              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -206,20 +173,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
+            <state relative-caret-position="192">
+              <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/netty/utils/Authenticated.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
+            <state relative-caret-position="272">
+              <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#569#570#0" expanded="true" />
@@ -314,6 +281,7 @@
         <option value="$PROJECT_DIR$/src/main/java/netty/server/NetworkHandler.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/java/netty/utils/Authenticated.java" />
       </list>
     </option>
   </component>
@@ -356,7 +324,7 @@
     <property name="DatabaseDriversLRU" value="mariadb" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1548589318127" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1548590682957" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -498,12 +466,12 @@
     </configuration>
     <list>
       <item itemvalue="Application.Main" />
-      <item itemvalue="JAR Application.Unnamed" />
       <item itemvalue="Gradle.AirsoftGPSServer [run]" />
       <item itemvalue="Gradle.AirsoftGPSServer [distZip]" />
       <item itemvalue="Gradle.AirsoftGPSServer [compileJava]" />
       <item itemvalue="Gradle.AirsoftGPSServer [clean]" />
       <item itemvalue="Gradle.AirsoftGPSServer [build]" />
+      <item itemvalue="JAR Application.Unnamed" />
     </list>
     <recent_temporary>
       <list>
@@ -548,15 +516,31 @@
       <workItem from="1548512537512" duration="2036000" />
       <workItem from="1548520548836" duration="4490000" />
       <workItem from="1548545577248" duration="676000" />
-      <workItem from="1548586489058" duration="2793000" />
+      <workItem from="1548586489058" duration="4451000" />
     </task>
+    <task id="LOCAL-00001" summary="Customized Gradle for Build">
+      <created>1548589385043</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1548589385043</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Customized Gradle for Build">
+      <created>1548590695258</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1548590695258</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="119879000" />
+    <option name="totallyTimeSpent" value="121537000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.17549168" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -603,6 +587,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Customized Gradle for Build" />
+    <option name="LAST_COMMIT_MESSAGE" value="Customized Gradle for Build" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -812,16 +800,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="54" column="53" selection-start-line="54" selection-start-column="53" selection-end-line="54" selection-end-column="53" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/PacketRegistry.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="96">
@@ -856,22 +834,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-13">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/netty/utils/Authenticated.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
+        <state relative-caret-position="272">
+          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#569#570#0" expanded="true" />
             <element signature="e#600#601#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
         </state>
       </provider>
     </entry>
