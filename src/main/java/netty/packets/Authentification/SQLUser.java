@@ -48,21 +48,7 @@ public class SQLUser {
             dataSource.setServerTimezone("UTC");
             dataSource.setPassword(PASSWORD);
             this.conn = dataSource.getConnection();
-/*
-            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `user` VALUES (?,?)");
-            preparedStatement.setString(1, "test");
-            preparedStatement.setString(2,BCrypt.hashpw("test", BCrypt.gensalt()));
-
-            preparedStatement.executeUpdate();
-
-            final PreparedStatement preparedStatement1 = conn.prepareStatement("INSERT INTO `user` VALUES (?,?)");
-            preparedStatement1.setString(1, "test2");
-            preparedStatement1.setString(2,BCrypt.hashpw("test2", BCrypt.gensalt()));
-
-            preparedStatement1.executeUpdate();
-            */
-
-            System.out.println("[User-System] MySQL Verbunden!");
+            System.out.println("[User-System] MySQL Connected!");
         } catch (final SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
