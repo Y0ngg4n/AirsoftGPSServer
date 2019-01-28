@@ -123,14 +123,24 @@ public class SQLUser {
     }
 
 
-    public void createUserTable() {
+    public void createUserTable(final Consumer<Void> consumer) {
         renewConnection();
 
         service.execute(() -> {
             try {
-                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `user` (id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-                        "username VARCHAR(100) NOT NULL UNIQUE," +
-                        "password varchar(100) NOT NULL);").execute();
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `user` (" +
+                        "  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
+                        "  `username` varchar(100) NOT NULL," +
+                        "  `password` varchar(100) NOT NULL," +
+                        "  `teamid` bigint(20) unsigned DEFAULT NULL," +
+                        "  `alive` tinyint(1) NOT NULL DEFAULT 1," +
+                        "  `status` tinyint(3) unsigned NOT NULL DEFAULT 0," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  UNIQUE KEY `username` (`username`)," +
+                        "  KEY `user_teams_FK` (`teamid`)," +
+                        "  CONSTRAINT `user_teams_FK` FOREIGN KEY (`teamid`) REFERENCES `teams` (`id`)" +
+                        ");").execute();
+                consumer.accept(null);
             } catch (final SQLException ex) {
                 System.out.println("SQLException: " + ex.getMessage());
                 System.out.println("SQLState: " + ex.getSQLState());
@@ -139,7 +149,7 @@ public class SQLUser {
         });
     }
 
-    public void createPositionTable() {
+    public void createPositionTable(final Consumer<Void> consumer) {
         renewConnection();
 
         service.execute(() -> {
@@ -151,6 +161,25 @@ public class SQLUser {
                         "latitude DOUBLE PRECISION NOT NULL," +
                         "longitude DOUBLE PRECISION NOT NULL," +
                         "CONSTRAINT userID_fk FOREIGN KEY (userID) REFERENCES `user`(id));").execute();
+                consumer.accept(null);
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
+    public void createTeamsTable(final Consumer<Void> consumer) {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `teams` (" +
+                        "  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
+                        "  `teamname` varchar(100) NOT NULL," +
+                        "  PRIMARY KEY (`id`));").execute();
+                consumer.accept(null);
             } catch (final SQLException ex) {
                 System.out.println("SQLException: " + ex.getMessage());
                 System.out.println("SQLState: " + ex.getSQLState());
@@ -161,33 +190,38 @@ public class SQLUser {
 
     public void getLatestPositionFromAllUser(final Consumer<JsonArray> callback) {
         renewConnection();
+service.execute(()-> {
+            try {
+                JsonArray jsonArray = new JsonArray();
+                //TODO: FIX SQL QUERY
+                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude, username, alive, status, teamid FROM `teams` inner join (`position` inner join `user`) group by `userID`").executeQuery();
 
-        try {
-            JsonArray jsonArray = new JsonArray();
-            ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude, username FROM `position` inner join `user` group by `userID`").executeQuery();
+                JsonObject jsonObject = null;
+                while (resultSet.next()) {
+                    jsonObject = new JsonObject();
+                    jsonObject.addProperty("timestamp", resultSet.getTimestamp("timestamp").toString());
+                    jsonObject.addProperty("userID", resultSet.getInt("userID"));
+                    jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
+                    jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
+                    jsonObject.addProperty("username", resultSet.getString("username"));
+                    jsonObject.addProperty("teamname", resultSet.getString("teamname"));
+                    jsonObject.addProperty("alive", resultSet.getBoolean("alive"));
+                    jsonObject.addProperty("status", resultSet.getString("status"));
+                    jsonArray.add(jsonObject);
+                }
+                Logger.debug(String.valueOf(jsonObject));
 
-            JsonObject jsonObject = null;
-            while (resultSet.next()) {
-                jsonObject = new JsonObject();
-                jsonObject.addProperty("timestamp", resultSet.getTimestamp("timestamp").toString());
-                jsonObject.addProperty("userID", resultSet.getInt("userID"));
-                jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
-                jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
-                jsonObject.addProperty("username", resultSet.getString("username"));
-                jsonArray.add(jsonObject);
+                callback.accept(jsonArray);
+                return;
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+
             }
-
-            callback.accept(jsonArray);
-            return;
-        } catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-
-        }
+        });
         callback.accept(null);
     }
-
 
     private JsonArray getPositionHistoryFromAllUSer() {
         renewConnection();

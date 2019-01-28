@@ -17,6 +17,7 @@ import netty.packets.PacketDecoder;
 import netty.packets.PacketEncoder;
 import netty.packets.out.ServerShutdownPacketOUT;
 import netty.utils.Authenticated;
+import netty.utils.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -26,7 +27,7 @@ public class NettyServer {
     private final EventLoopGroup producer, consumer;
     private final int port;
     private Channel channel;
-    public static SQLUser sqlUser = new SQLUser("localhost", 3306, "airsoftgps", "root", "12345");
+    public static SQLUser sqlUser = new SQLUser("localhost", 3306, "airsoftgps", "airsoftgps", "bierbrauer-beerzone");
     private final boolean EPOLL = Epoll.isAvailable();
 
     public NettyServer(final int port) {
@@ -52,7 +53,7 @@ public class NettyServer {
         System.out.println("Server started...");
         System.out.println("Enter commands:");
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        
+
         try {
 
             String line;
@@ -61,7 +62,7 @@ public class NettyServer {
                     shutdown();
                     System.out.println("Send Shutdown");
                     return this;
-                }else if(line.toLowerCase().startsWith("hashpass")){
+                } else if (line.toLowerCase().startsWith("hashpass")) {
                     System.out.println(BCrypt.hashpw(line.split(" ")[1], BCrypt.gensalt()));
                 }
                 System.out.println("Enter commands:");
@@ -79,8 +80,13 @@ public class NettyServer {
         channel.closeFuture().syncUninterruptibly();
     }
 
-    private void createTables(){
-        sqlUser.createUserTable();
-        sqlUser.createPositionTable();
+    private void createTables() {
+        sqlUser.createTeamsTable(aVoid -> {
+            sqlUser.createUserTable(aVoid1 -> {
+                sqlUser.createPositionTable(aVoid2 -> {
+                    Logger.info("§eTables successfully created!");
+                });
+            });
+        });
     }
 }
