@@ -10,6 +10,7 @@ import netty.packets.PacketIN;
 import netty.packets.in.AuthPacketIN;
 import netty.packets.in.ClientPositionIN;
 import netty.packets.in.ClientShutdownPacketIN;
+import netty.packets.in.ClientStatusUpdateIN;
 import netty.packets.out.ClientAllPositionsOUT;
 import netty.packets.out.LoginResponsePacketOUT;
 import netty.utils.Authenticated;
@@ -59,6 +60,17 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             Logger.debug("Incoming Client Position: lat: " + clientPositionIN.getLatitude() + " long: " + clientPositionIN.getLongitude());
             NettyServer.sqlUser.insertPositionIfChanged(clientPositionIN.getUsername(), clientPositionIN.getLatitude(), clientPositionIN.getLongitude());
 
+            NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
+                final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
+                for (Channel channel1 : Authenticated.getChannels()) {
+                    channel1.writeAndFlush(clientAllPositionsOUT);
+                    Logger.debug("Packets send to " + channel.id());
+                }
+            });
+        }else if(packet instanceof ClientStatusUpdateIN){
+            final ClientStatusUpdateIN clientStatusUpdateIN = (ClientStatusUpdateIN) packet;
+            Logger.debug("Incoming Client Status: alive: " + clientStatusUpdateIN.getAlive() + " underfire: " + clientStatusUpdateIN.getUnderfire() + " mission: " + clientStatusUpdateIN.getMission() + " support: " + clientStatusUpdateIN.getSupport());
+            NettyServer.sqlUser.updateUserStatus(clientStatusUpdateIN.getUsername(), clientStatusUpdateIN.getAlive(), clientStatusUpdateIN.getUnderfire(), clientStatusUpdateIN.getMission(), clientStatusUpdateIN.getSupport());
             NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
                 final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
                 for (Channel channel1 : Authenticated.getChannels()) {

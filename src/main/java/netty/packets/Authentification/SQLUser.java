@@ -64,7 +64,9 @@ public class SQLUser {
                 this.conn.close();
             }
         } catch (final SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
         }
     }
 
@@ -132,9 +134,11 @@ public class SQLUser {
                         "  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
                         "  `username` varchar(100) NOT NULL," +
                         "  `password` varchar(100) NOT NULL," +
-                        "  `teamid` bigint(20) unsigned DEFAULT NULL," +
-                        "  `alive` tinyint(1) NOT NULL DEFAULT 1," +
-                        "  `status` tinyint(3) unsigned NOT NULL DEFAULT 0," +
+                        "  `teamid` bigint(20) unsigned DEFAULT 1," +
+                        "  `alive` bool NOT NULL DEFAULT true ," +
+                        "  `underfire` bool NOT NULL DEFAULT false ," +
+                        "  `mission` bool NOT NULL DEFAULT false ," +
+                        "  `support` bool NOT NULL DEFAULT false ," +
                         "  PRIMARY KEY (`id`)," +
                         "  UNIQUE KEY `username` (`username`)," +
                         "  KEY `user_teams_FK` (`teamid`)," +
@@ -179,6 +183,9 @@ public class SQLUser {
                         "  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
                         "  `teamname` varchar(100) NOT NULL," +
                         "  PRIMARY KEY (`id`));").execute();
+                ResultSet resultSet = conn.prepareStatement("SELECT * FROM `teams`").executeQuery();
+                if (!resultSet.next())
+                    conn.prepareStatement("INSERT INTO `teams` (teamname) VALUES ('NO TEAM')").execute();
                 consumer.accept(null);
             } catch (final SQLException ex) {
                 System.out.println("SQLException: " + ex.getMessage());
@@ -190,11 +197,11 @@ public class SQLUser {
 
     public void getLatestPositionFromAllUser(final Consumer<JsonArray> callback) {
         renewConnection();
-service.execute(()-> {
+        service.execute(() -> {
             try {
                 JsonArray jsonArray = new JsonArray();
                 //TODO: FIX SQL QUERY
-                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude, username, alive, status, teamid FROM `teams` inner join (`position` inner join `user`) group by `userID`").executeQuery();
+                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude, username, alive, underfire, mission, support, teamid, teamname FROM `teams` inner join (`position` inner join `user`) group by `userID`").executeQuery();
 
                 JsonObject jsonObject = null;
                 while (resultSet.next()) {
@@ -205,8 +212,11 @@ service.execute(()-> {
                     jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
                     jsonObject.addProperty("username", resultSet.getString("username"));
                     jsonObject.addProperty("teamname", resultSet.getString("teamname"));
+                    jsonObject.addProperty("teamid", resultSet.getString("teamid"));
                     jsonObject.addProperty("alive", resultSet.getBoolean("alive"));
-                    jsonObject.addProperty("status", resultSet.getString("status"));
+                    jsonObject.addProperty("underfire", resultSet.getString("underfire"));
+                    jsonObject.addProperty("mission", resultSet.getString("mission"));
+                    jsonObject.addProperty("support", resultSet.getString("support"));
                     jsonArray.add(jsonObject);
                 }
                 Logger.debug(String.valueOf(jsonObject));
@@ -247,11 +257,42 @@ service.execute(()-> {
                             jsonArray.add(userJsonObject);
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        System.out.println("SQLException: " + e.getMessage());
+                        System.out.println("SQLState: " + e.getSQLState());
+                        System.out.println("VendorError: " + e.getErrorCode());
                     }
                 }
         );
         return jsonArray;
+    }
+
+    public void updateUserStatus(String username, boolean alive, boolean underfire, boolean mission, boolean support) {
+        renewConnection();
+        service.execute(() -> {
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM `user` where username = ?");
+                preparedStatement.setString(1, username);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                int userID;
+                if(resultSet.next()){
+                    userID = resultSet.getInt("id");
+                }else{
+                    throw new SQLException();
+                }
+
+                preparedStatement = conn.prepareStatement("UPDATE `user` SET alive = ?, underfire = ?, mission = ?, support = ? WHERE id = ? ");
+                preparedStatement.setBoolean(1, alive);
+                preparedStatement.setBoolean(2, underfire);
+                preparedStatement.setBoolean(3, mission);
+                preparedStatement.setBoolean(4, support);
+                preparedStatement.setInt(5, userID);
+                preparedStatement.execute();
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
     }
 
     private void renewConnection() {
@@ -260,7 +301,9 @@ service.execute(()-> {
                 getConnection();
             }
         } catch (final SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
         }
     }
 
