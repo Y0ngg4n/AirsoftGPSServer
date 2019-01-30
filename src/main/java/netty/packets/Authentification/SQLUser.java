@@ -95,7 +95,24 @@ public class SQLUser {
         });
     }
 
-    public void insertPositionIfChanged(String username, double latitude, double longitude) {
+    public void setOnlineUser(final String username, final boolean online) {
+        renewConnection();
+        service.execute(() -> {
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("UPDATE `user` SET online=? WHERE username = ?");
+                preparedStatement.setBoolean(1, online);
+                preparedStatement.setString(2, username);
+                preparedStatement.execute();
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
+
+    public void insertPositionIfChanged(final String username, final double latitude, final double longitude) {
         renewConnection();
 
         service.execute(() -> {
@@ -135,10 +152,11 @@ public class SQLUser {
                         "  `username` varchar(100) NOT NULL," +
                         "  `password` varchar(100) NOT NULL," +
                         "  `teamid` bigint(20) unsigned DEFAULT 1," +
-                        "  `alive` bool NOT NULL DEFAULT true ," +
-                        "  `underfire` bool NOT NULL DEFAULT false ," +
-                        "  `mission` bool NOT NULL DEFAULT false ," +
-                        "  `support` bool NOT NULL DEFAULT false ," +
+                        "  `alive` bool NOT NULL DEFAULT true," +
+                        "  `underfire` bool NOT NULL DEFAULT false," +
+                        "  `mission` bool NOT NULL DEFAULT false," +
+                        "  `support` bool NOT NULL DEFAULT false," +
+                        "  `online` bool NOT NULL DEFAULT false," +
                         "  PRIMARY KEY (`id`)," +
                         "  UNIQUE KEY `username` (`username`)," +
                         "  KEY `user_teams_FK` (`teamid`)," +
@@ -201,7 +219,9 @@ public class SQLUser {
             try {
                 JsonArray jsonArray = new JsonArray();
                 //TODO: FIX SQL QUERY
-                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, userID, latitude, longitude, username, alive, underfire, mission, support, teamid, teamname FROM `teams` inner join (`position` inner join `user`) group by `userID`").executeQuery();
+                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, " +
+                        "userID, latitude, longitude, username, alive, underfire, mission, support, teamid, teamname " +
+                        "FROM `teams` inner join (`position` inner join `user`) WHERE online=true group by `userID`").executeQuery();
 
                 JsonObject jsonObject = null;
                 while (resultSet.next()) {
@@ -266,7 +286,7 @@ public class SQLUser {
         return jsonArray;
     }
 
-    public void updateUserStatus(String username, boolean alive, boolean underfire, boolean mission, boolean support) {
+    public void updateUserStatus(final String username, final boolean alive, final boolean underfire, final boolean mission, final boolean support) {
         renewConnection();
         service.execute(() -> {
             try {
@@ -274,9 +294,9 @@ public class SQLUser {
                 preparedStatement.setString(1, username);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 int userID;
-                if(resultSet.next()){
+                if (resultSet.next()) {
                     userID = resultSet.getInt("id");
-                }else{
+                } else {
                     throw new SQLException();
                 }
 

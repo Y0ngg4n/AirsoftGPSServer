@@ -15,6 +15,7 @@ import netty.packets.out.ClientAllPositionsOUT;
 import netty.packets.out.LoginResponsePacketOUT;
 import netty.utils.Authenticated;
 import netty.utils.Logger;
+import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +54,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                     userMap.put(channel, user);
                     Authenticated.add(channel);
                     Logger.info("§eUser: §c" + user.getUsername() + "§e Loggte sich ein");
+                    NettyServer.sqlUser.setOnlineUser( user.getUsername(), true);
                 }
             }));
         } else if (packet instanceof ClientPositionIN) {
@@ -65,9 +67,10 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                 for (Channel channel1 : Authenticated.getChannels()) {
                     channel1.writeAndFlush(clientAllPositionsOUT);
                     Logger.debug("Packets send to " + channel.id());
+                    Logger.debug(String.valueOf(jsonArray));
                 }
             });
-        }else if(packet instanceof ClientStatusUpdateIN){
+        } else if (packet instanceof ClientStatusUpdateIN) {
             final ClientStatusUpdateIN clientStatusUpdateIN = (ClientStatusUpdateIN) packet;
             Logger.debug("Incoming Client Status: alive: " + clientStatusUpdateIN.getAlive() + " underfire: " + clientStatusUpdateIN.getUnderfire() + " mission: " + clientStatusUpdateIN.getMission() + " support: " + clientStatusUpdateIN.getSupport());
             NettyServer.sqlUser.updateUserStatus(clientStatusUpdateIN.getUsername(), clientStatusUpdateIN.getAlive(), clientStatusUpdateIN.getUnderfire(), clientStatusUpdateIN.getMission(), clientStatusUpdateIN.getSupport());
@@ -78,6 +81,14 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                     Logger.debug("Packets send to " + channel.id());
                 }
             });
+        }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        if (userMap.containsKey(ctx.channel())) {
+            Logger.info(userMap.get(ctx.channel()).getUsername());
+                NettyServer.sqlUser.setOnlineUser(userMap.get(ctx.channel()).getUsername(), false);
         }
     }
 }

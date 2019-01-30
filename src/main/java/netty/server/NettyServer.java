@@ -59,6 +59,7 @@ public class NettyServer {
             String line;
             while ((line = in.readLine()) != null) {
                 if (line.equalsIgnoreCase("shutdown")) {
+
                     shutdown();
                     System.out.println("Send Shutdown");
                     return this;
