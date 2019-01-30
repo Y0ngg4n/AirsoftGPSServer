@@ -219,9 +219,23 @@ public class SQLUser {
             try {
                 JsonArray jsonArray = new JsonArray();
                 //TODO: FIX SQL QUERY
-                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, " +
-                        "userID, latitude, longitude, username, alive, underfire, mission, support, teamid, teamname " +
-                        "FROM `teams` inner join (`position` inner join `user`) WHERE online=true group by `userID`").executeQuery();
+                ResultSet resultSet = conn.prepareStatement("SELECT " +
+                        "p.latitude, " +
+                        "p.longitude, " +
+                        "p.`timestamp`, " +
+                        "u.id as userID, " +
+                        "u.username, " +
+                        "u.alive, " +
+                        "u.underfire, " +
+                        "u.mission, " +
+                        "u.support, " +
+                        "t.id as teamid, " +
+                        "t.teamname " +
+                        "FROM `user` u " +
+                        "JOIN `position` p ON (u.id = p.userID) " +
+                        "LEFT OUTER JOIN `position` p2 ON (u.id = p2.userID AND p2.`timestamp` > p.`timestamp`) " +
+                        "JOIN teams t ON (u.teamid = t.id) " +
+                        "WHERE p2.id IS NULL AND u.online;").executeQuery();
 
                 JsonObject jsonObject = null;
                 while (resultSet.next()) {
