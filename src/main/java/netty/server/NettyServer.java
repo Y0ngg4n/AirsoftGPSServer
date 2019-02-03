@@ -1,5 +1,6 @@
 package netty.server;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -65,6 +66,19 @@ public class NettyServer {
                     return this;
                 } else if (line.toLowerCase().startsWith("hashpass")) {
                     System.out.println(BCrypt.hashpw(line.split(" ")[1], BCrypt.gensalt()));
+                } else if (line.toLowerCase().startsWith("orga")) {
+                    String args[] = line.split(" ");
+                    if (args[1].equalsIgnoreCase("add")) {
+                        sqlUser.addOrgaUser(aBoolean -> {
+                            if (aBoolean) Logger.debug("§eUser " + args[2] + "sucessfully created!");
+                            else Logger.debug("§eUser could not be created!");
+                        }, args[2], Boolean.valueOf(args[3]), Boolean.valueOf(args[4]), Boolean.valueOf(args[5]), Boolean.valueOf(args[6]));
+                    } else if (args[1].equalsIgnoreCase("remove")) {
+                        sqlUser.removeOrgaUser(aBoolean -> {
+                            if (aBoolean) Logger.debug("§eUser " + args[2] + "sucessfully removed!");
+                            else Logger.debug("§eUser could not be removed!");
+                        }, args[2]);
+                    }
                 }
                 System.out.println("Enter commands:");
             }
@@ -85,7 +99,11 @@ public class NettyServer {
         sqlUser.createTeamsTable(aVoid -> {
             sqlUser.createUserTable(aVoid1 -> {
                 sqlUser.createPositionTable(aVoid2 -> {
-                    Logger.info("§eTables successfully created!");
+                    sqlUser.createOrgaTable(aVoid3 -> {
+                        sqlUser.createTacticalPinTable(aVoid4 -> {
+                            Logger.info("§eTables successfully created!");
+                        });
+                    });
                 });
             });
         });

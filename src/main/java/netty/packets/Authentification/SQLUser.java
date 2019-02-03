@@ -141,6 +141,25 @@ public class SQLUser {
         });
     }
 
+    public void isOrga(Consumer<Boolean> consumer, final String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM `orga` WHERE userID = (SELECT id FROM `user` where username = ?) LIMIT 1");
+                preparedStatement.setString(1, username);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if(resultSet.next())
+                    consumer.accept(true);
+                else consumer.accept(false);
+            }catch (SQLException ex){
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+                consumer.accept(false);
+            }
+        });
+    }
 
     public void createUserTable(final Consumer<Void> consumer) {
         renewConnection();
@@ -183,6 +202,54 @@ public class SQLUser {
                         "latitude DOUBLE PRECISION NOT NULL," +
                         "longitude DOUBLE PRECISION NOT NULL," +
                         "CONSTRAINT userID_fk FOREIGN KEY (userID) REFERENCES `user`(id));").execute();
+                consumer.accept(null);
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
+    public void createOrgaTable(final Consumer<Void> consumer) {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS orga (" +
+                        "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT," +
+                        "userID BIGINT UNSIGNED NOT NULL," +
+                        "tacticalPin BOOL DEFAULT false NOT NULL," +
+                        "missionPin BOOL DEFAULT false NOT NULL," +
+                        "hqPin BOOL DEFAULT false NOT NULL," +
+                        "respawnPin BOOL DEFAULT false NOT NULL," +
+                        "CONSTRAINT orga_PK PRIMARY KEY (id)," +
+                        "CONSTRAINT orga_user_FK FOREIGN KEY (userID) REFERENCES airsoftgps.`user`(id)" +
+                        ");").execute();
+                consumer.accept(null);
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
+    public void createTacticalPinTable(final Consumer<Void> consumer) {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS tacticalPin (" +
+                        "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT," +
+                        "title varchar(100) NOT NULL," +
+                        "description varchar(255) NULL," +
+                        "teamID BIGINT UNSIGNED NULL," +
+                        "creator BIGINT UNSIGNED NOT NULL," +
+                        "CONSTRAINT tacticalPin_PK PRIMARY KEY (id)," +
+                        "CONSTRAINT tacticalPin_teams_FK FOREIGN KEY (teamID) REFERENCES airsoftgps.teams(id)," +
+                        "CONSTRAINT tacticalPin_user_FK FOREIGN KEY (creator) REFERENCES airsoftgps.`user`(id)" +
+                        ");").execute();
                 consumer.accept(null);
             } catch (final SQLException ex) {
                 System.out.println("SQLException: " + ex.getMessage());
@@ -253,18 +320,17 @@ public class SQLUser {
                     jsonObject.addProperty("support", resultSet.getString("support"));
                     jsonArray.add(jsonObject);
                 }
-                Logger.debug(String.valueOf(jsonObject));
+                Logger.debug("SQLUser: " + String.valueOf(jsonArray));
 
                 callback.accept(jsonArray);
-                return;
             } catch (SQLException e) {
                 System.out.println("SQLException: " + e.getMessage());
                 System.out.println("SQLState: " + e.getSQLState());
                 System.out.println("VendorError: " + e.getErrorCode());
-
+                callback.accept(null);
             }
         });
-        callback.accept(null);
+
     }
 
     private JsonArray getPositionHistoryFromAllUSer() {
@@ -325,6 +391,44 @@ public class SQLUser {
                 System.out.println("SQLException: " + e.getMessage());
                 System.out.println("SQLState: " + e.getSQLState());
                 System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+
+    public void addOrgaUser(Consumer<Boolean> consumer, final String username, final boolean tacticalPin, final boolean missionPin, final  boolean hqPin, final  boolean respawnPin) {
+        renewConnection();
+        service.execute(() -> {
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `orga` (userID, tacticalPin, missionPin, hqPin, respawnPin) VALUES ((SELECT id FROM `user` where username = ?), ?, ?, ?, ?");
+                preparedStatement.setString(1, username);
+                preparedStatement.setBoolean(2, tacticalPin);
+                preparedStatement.setBoolean(3, missionPin);
+                preparedStatement.setBoolean(4, hqPin);
+                preparedStatement.setBoolean(5, respawnPin);
+                preparedStatement.execute();
+                consumer.accept(true);
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                consumer.accept(false);
+            }
+        });
+    }
+
+    public void removeOrgaUser(Consumer<Boolean> consumer, final String username){
+        renewConnection();
+        service.execute(() -> {
+            try{
+                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM TABLE `orga` WHERE userID = (SELECT id FROM `user` where username = ?);");
+                preparedStatement.setString(1, username);
+                preparedStatement.execute();
+                consumer.accept(true);
+            }catch (SQLException e){
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                consumer.accept(false);
             }
         });
     }

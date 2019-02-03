@@ -13,6 +13,7 @@ import netty.packets.in.ClientShutdownPacketIN;
 import netty.packets.in.ClientStatusUpdateIN;
 import netty.packets.out.ClientAllPositionsOUT;
 import netty.packets.out.LoginResponsePacketOUT;
+import netty.packets.out.OrgaAuthOut;
 import netty.utils.Authenticated;
 import netty.utils.Logger;
 import sun.rmi.runtime.Log;
@@ -54,7 +55,21 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                     userMap.put(channel, user);
                     Authenticated.add(channel);
                     Logger.info("§eUser: §c" + user.getUsername() + "§e Loggte sich ein");
-                    NettyServer.sqlUser.setOnlineUser( user.getUsername(), true);
+                    NettyServer.sqlUser.isOrga(aBoolean1 -> {
+                        if (aBoolean1) {
+                            ctx.writeAndFlush(new OrgaAuthOut(true));
+                            Logger.info("§eSending OrgaAuth-Packet to " + user.getUsername());
+                        }
+                    }, user.getUsername());
+                    NettyServer.sqlUser.setOnlineUser(user.getUsername(), true);
+                    NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
+                        final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
+                        for (Channel channel1 : Authenticated.getChannels()) {
+                            channel1.writeAndFlush(clientAllPositionsOUT);
+                            Logger.debug("Packets send to " + channel.id());
+                            Logger.debug("ClientStatusIN " + String.valueOf(jsonArray));
+                        }
+                    });
                 }
             }));
         } else if (packet instanceof ClientPositionIN) {
@@ -67,7 +82,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                 for (Channel channel1 : Authenticated.getChannels()) {
                     channel1.writeAndFlush(clientAllPositionsOUT);
                     Logger.debug("Packets send to " + channel.id());
-                    Logger.debug(String.valueOf(jsonArray));
+                    Logger.debug("ClientPositionIN " + String.valueOf(jsonArray));
                 }
             });
         } else if (packet instanceof ClientStatusUpdateIN) {
@@ -79,16 +94,22 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                 for (Channel channel1 : Authenticated.getChannels()) {
                     channel1.writeAndFlush(clientAllPositionsOUT);
                     Logger.debug("Packets send to " + channel.id());
+                    Logger.debug("ClientStatusIN " + String.valueOf(jsonArray));
                 }
             });
         }
     }
 
     @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        Logger.error(cause.getMessage());
+    }
+
+    @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         if (userMap.containsKey(ctx.channel())) {
             Logger.info(userMap.get(ctx.channel()).getUsername());
-                NettyServer.sqlUser.setOnlineUser(userMap.get(ctx.channel()).getUsername(), false);
+            NettyServer.sqlUser.setOnlineUser(userMap.get(ctx.channel()).getUsername(), false);
         }
     }
 }
