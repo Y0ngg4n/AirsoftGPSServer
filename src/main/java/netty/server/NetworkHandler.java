@@ -7,13 +7,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import netty.packets.Authentification.Authentificator;
 import netty.packets.Authentification.User;
 import netty.packets.PacketIN;
-import netty.packets.in.AuthPacketIN;
-import netty.packets.in.ClientPositionIN;
-import netty.packets.in.ClientShutdownPacketIN;
-import netty.packets.in.ClientStatusUpdateIN;
-import netty.packets.out.ClientAllPositionsOUT;
-import netty.packets.out.LoginResponsePacketOUT;
-import netty.packets.out.OrgaAuthOut;
+import netty.packets.in.*;
+import netty.packets.out.*;
 import netty.utils.Authenticated;
 import netty.utils.Logger;
 import sun.rmi.runtime.Log;
@@ -56,8 +51,8 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                     Authenticated.add(channel);
                     Logger.info("§eUser: §c" + user.getUsername() + "§e Loggte sich ein");
                     NettyServer.sqlUser.isOrga(aBoolean1 -> {
-                        if (aBoolean1) {
-                            ctx.writeAndFlush(new OrgaAuthOut(true));
+                        if (aBoolean1.get(0)) {
+                            ctx.writeAndFlush(new OrgaAuthOut(aBoolean1.get(0), aBoolean1.get(1), aBoolean1.get(2), aBoolean1.get(3), aBoolean1.get(4), aBoolean1.get(5)));
                             Logger.info("§eSending OrgaAuth-Packet to " + user.getUsername());
                         }
                     }, user.getUsername());
@@ -93,10 +88,55 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                 final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
                 for (Channel channel1 : Authenticated.getChannels()) {
                     channel1.writeAndFlush(clientAllPositionsOUT);
-                    Logger.debug("Packets send to " + channel.id());
+                    Logger.debug("ClientStatusOUT-Packet send to " + channel.id());
                     Logger.debug("ClientStatusIN " + String.valueOf(jsonArray));
                 }
             });
+        } else if (packet instanceof AddTacticalMarkerIN) {
+            AddTacticalMarkerIN addTacticalMarkerIN = (AddTacticalMarkerIN) packet;
+            NettyServer.sqlUser.addTacticalMarker(addTacticalMarkerIN.getLatitude(), addTacticalMarkerIN.getLongitude(), addTacticalMarkerIN.getTeamname(), addTacticalMarkerIN.getTitle(), addTacticalMarkerIN.getDescription(), addTacticalMarkerIN.getUsername());
+            Logger.debug("Add Tactical Marker");
+            final AddTacticalMarkerOUT addTacticalMarkerOUT = new AddTacticalMarkerOUT(addTacticalMarkerIN.getLatitude(), addTacticalMarkerIN.getLongitude(), addTacticalMarkerIN.getTeamname(), addTacticalMarkerIN.getTitle(), addTacticalMarkerIN.getDescription(), addTacticalMarkerIN.getUsername());
+            for (Channel channel1 : Authenticated.getChannels()) {
+                channel1.writeAndFlush(addTacticalMarkerOUT);
+                Logger.debug("AddTacticalMarkerOUT-Packet send to " + channel.id());
+            }
+        } else if (packet instanceof AddMissionMarkerIN) {
+            AddMissionMarkerIN addMissionMarkerIN = (AddMissionMarkerIN) packet;
+            NettyServer.sqlUser.addMissionMarker(addMissionMarkerIN.getLatitude(), addMissionMarkerIN.getLongitude(), addMissionMarkerIN.getTitle(), addMissionMarkerIN.getDescription(), addMissionMarkerIN.getUsername());
+            Logger.debug("Add Mission Marker");
+            final AddMissionMarkerOUT addMissionMarkerOUT = new AddMissionMarkerOUT(addMissionMarkerIN.getLatitude(), addMissionMarkerIN.getLongitude(), addMissionMarkerIN.getTitle(), addMissionMarkerIN.getDescription(), addMissionMarkerIN.getUsername());
+            for (Channel channel1 : Authenticated.getChannels()) {
+                channel1.writeAndFlush(addMissionMarkerOUT);
+                Logger.debug("AddMissionMarkerOUT-Packet send to " + channel.id());
+            }
+        } else if (packet instanceof AddRespawnMarkerIN) {
+            AddRespawnMarkerIN addRespawnMarkerIN = (AddRespawnMarkerIN) packet;
+            NettyServer.sqlUser.addRespawnMarker(addRespawnMarkerIN.getLatitude(), addRespawnMarkerIN.getLongitude(), addRespawnMarkerIN.getTitle(), addRespawnMarkerIN.getDescription(), addRespawnMarkerIN.getUsername());
+            Logger.debug("Add Respawn Marker");
+            final AddRespawnMarkerOUT addRespawnMarkerOUT = new AddRespawnMarkerOUT(addRespawnMarkerIN.getLatitude(), addRespawnMarkerIN.getLongitude(), addRespawnMarkerIN.getTitle(), addRespawnMarkerIN.getDescription(), addRespawnMarkerIN.getUsername());
+            for (Channel channel1 : Authenticated.getChannels()) {
+                channel1.writeAndFlush(addRespawnMarkerOUT);
+                Logger.debug("AddRespawnMarkerOUT-Packet send to " + channel.id());
+            }
+        } else if (packet instanceof AddHQMarkerIN) {
+            AddHQMarkerIN addHQMarkerIN = (AddHQMarkerIN) packet;
+            NettyServer.sqlUser.addHQMarker(addHQMarkerIN.getLatitude(), addHQMarkerIN.getLongitude(), addHQMarkerIN.getTitle(), addHQMarkerIN.getDescription(), addHQMarkerIN.getUsername());
+            Logger.debug("Add HQ Marker");
+            final AddHQMarkerOUT addHQMarkerOUT = new AddHQMarkerOUT(addHQMarkerIN.getLatitude(), addHQMarkerIN.getLongitude(), addHQMarkerIN.getTitle(), addHQMarkerIN.getDescription(),addHQMarkerIN.getUsername());
+            for (Channel channel1 : Authenticated.getChannels()) {
+                channel1.writeAndFlush(addHQMarkerOUT);
+                Logger.debug("AddHQMarkerOUT-Packet send to " + channel.id());
+            }
+        } else if (packet instanceof AddFlagMarkerIN) {
+            AddFlagMarkerIN addFlagMarkerIN = (AddFlagMarkerIN) packet;
+            NettyServer.sqlUser.addFlagMarker(addFlagMarkerIN.getLatitude(), addFlagMarkerIN.getLongitude(), addFlagMarkerIN.getTitle(), addFlagMarkerIN.getDescription(), addFlagMarkerIN.getUsername());
+            Logger.debug("Add Flag Marker");
+            final AddFlagMarkerOUT addFlagMarkerOUT = new AddFlagMarkerOUT(addFlagMarkerIN.getLatitude(), addFlagMarkerIN.getLongitude(), addFlagMarkerIN.getTitle(), addFlagMarkerIN.getDescription(), addFlagMarkerIN.getUsername());
+            for (Channel channel1 : Authenticated.getChannels()) {
+                channel1.writeAndFlush(addFlagMarkerOUT);
+                Logger.debug("AddFlagMarkerOUT-Packet send to " + channel.id());
+            }
         }
     }
 

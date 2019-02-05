@@ -14,6 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
@@ -74,7 +76,7 @@ public class SQLUser {
         renewConnection();
         service.execute(() -> {
             try {
-                final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM `user` WHERE username = ?");
+                final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM `users` WHERE username = ?");
                 preparedStatement.setString(1, username);
 
                 final ResultSet resultSet = preparedStatement.executeQuery();
@@ -99,7 +101,7 @@ public class SQLUser {
         renewConnection();
         service.execute(() -> {
             try {
-                PreparedStatement preparedStatement = conn.prepareStatement("UPDATE `user` SET online=? WHERE username = ?");
+                PreparedStatement preparedStatement = conn.prepareStatement("UPDATE `users` SET online=? WHERE username = ?");
                 preparedStatement.setBoolean(1, online);
                 preparedStatement.setString(2, username);
                 preparedStatement.execute();
@@ -117,13 +119,13 @@ public class SQLUser {
 
         service.execute(() -> {
             try {
-                PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM `position` WHERE userID = (SELECT id FROM `user` WHERE username = ?) ORDER BY timestamp DESC LIMIT 1;");
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM `positions` WHERE userID = (SELECT id FROM `users` WHERE username = ?) ORDER BY timestamp DESC LIMIT 1;");
                 preparedStatement.setString(1, username);
 
                 final ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (!resultSet.next() || (resultSet.getDouble("latitude") != latitude || resultSet.getDouble("longitude") != longitude)) {
-                    preparedStatement = conn.prepareStatement("INSERT INTO `position` (userID, latitude, longitude) VALUES ((SELECT id FROM `user` WHERE username = ?), ?, ?) ");
+                    preparedStatement = conn.prepareStatement("INSERT INTO `positions` (userID, latitude, longitude) VALUES ((SELECT id FROM `users` WHERE username = ?), ?, ?) ");
                     preparedStatement.setString(1, username);
                     preparedStatement.setDouble(2, latitude);
                     preparedStatement.setDouble(3, longitude);
@@ -141,22 +143,33 @@ public class SQLUser {
         });
     }
 
-    public void isOrga(Consumer<Boolean> consumer, final String username){
+    public void isOrga(Consumer<ArrayList<Boolean>> consumer, final String username){
         renewConnection();
         service.execute(()->{
             try {
-                PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM `orga` WHERE userID = (SELECT id FROM `user` where username = ?) LIMIT 1");
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM `orga` WHERE userID = (SELECT id FROM `users` where username = ?) LIMIT 1");
                 preparedStatement.setString(1, username);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
-                if(resultSet.next())
-                    consumer.accept(true);
-                else consumer.accept(false);
+                    ArrayList<Boolean> booleans = new ArrayList<Boolean>();
+                if(resultSet.next()){
+                    booleans.add(true);
+                    booleans.add(resultSet.getBoolean("tacticalMarker"));
+                    booleans.add(resultSet.getBoolean("missionMarker"));
+                    booleans.add(resultSet.getBoolean("hqMarker"));
+                    booleans.add(resultSet.getBoolean("respawnMarker"));
+                    booleans.add(resultSet.getBoolean("flagMarker"));
+                    consumer.accept(booleans);
+                }
+                else {
+                    booleans.add(true);
+                    consumer.accept(booleans);
+                }
             }catch (SQLException ex){
                 System.out.println("SQLException: " + ex.getMessage());
                 System.out.println("SQLState: " + ex.getSQLState());
                 System.out.println("VendorError: " + ex.getErrorCode());
-                consumer.accept(false);
+                consumer.accept(null);
             }
         });
     }
@@ -166,7 +179,7 @@ public class SQLUser {
 
         service.execute(() -> {
             try {
-                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `user` (" +
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `users` (" +
                         "  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
                         "  `username` varchar(100) NOT NULL," +
                         "  `password` varchar(100) NOT NULL," +
@@ -195,13 +208,13 @@ public class SQLUser {
 
         service.execute(() -> {
             try {
-                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `position` (" +
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `positions` (" +
                         "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY," +
                         "`timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL," +
                         "userID BIGINT UNSIGNED NOT NULL," +
                         "latitude DOUBLE PRECISION NOT NULL," +
                         "longitude DOUBLE PRECISION NOT NULL," +
-                        "CONSTRAINT userID_fk FOREIGN KEY (userID) REFERENCES `user`(id));").execute();
+                        "CONSTRAINT userID_fk FOREIGN KEY (userID) REFERENCES `users`(id));").execute();
                 consumer.accept(null);
             } catch (final SQLException ex) {
                 System.out.println("SQLException: " + ex.getMessage());
@@ -216,15 +229,16 @@ public class SQLUser {
 
         service.execute(() -> {
             try {
-                conn.prepareStatement("CREATE TABLE IF NOT EXISTS orga (" +
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `orga` (" +
                         "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT," +
                         "userID BIGINT UNSIGNED NOT NULL," +
-                        "tacticalPin BOOL DEFAULT false NOT NULL," +
-                        "missionPin BOOL DEFAULT false NOT NULL," +
-                        "hqPin BOOL DEFAULT false NOT NULL," +
-                        "respawnPin BOOL DEFAULT false NOT NULL," +
+                        "tacticalMarker BOOL DEFAULT false NOT NULL," +
+                        "missionMarker BOOL DEFAULT false NOT NULL," +
+                        "hqMarker BOOL DEFAULT false NOT NULL," +
+                        "respawnMarker BOOL DEFAULT false NOT NULL," +
+                        "flagMarker BOOL DEFAULT false NOT NULL," +
                         "CONSTRAINT orga_PK PRIMARY KEY (id)," +
-                        "CONSTRAINT orga_user_FK FOREIGN KEY (userID) REFERENCES airsoftgps.`user`(id)" +
+                        "CONSTRAINT orga_user_FK FOREIGN KEY (userID) REFERENCES `users`(id)" +
                         ");").execute();
                 consumer.accept(null);
             } catch (final SQLException ex) {
@@ -235,20 +249,24 @@ public class SQLUser {
         });
     }
 
-    public void createTacticalPinTable(final Consumer<Void> consumer) {
+    public void createTacticalMarkerTable(final Consumer<Void> consumer) {
         renewConnection();
 
         service.execute(() -> {
             try {
-                conn.prepareStatement("CREATE TABLE IF NOT EXISTS tacticalPin (" +
-                        "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT," +
-                        "title varchar(100) NOT NULL," +
-                        "description varchar(255) NULL," +
-                        "teamID BIGINT UNSIGNED NULL," +
-                        "creator BIGINT UNSIGNED NOT NULL," +
-                        "CONSTRAINT tacticalPin_PK PRIMARY KEY (id)," +
-                        "CONSTRAINT tacticalPin_teams_FK FOREIGN KEY (teamID) REFERENCES airsoftgps.teams(id)," +
-                        "CONSTRAINT tacticalPin_user_FK FOREIGN KEY (creator) REFERENCES airsoftgps.`user`(id)" +
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `tacticalMarkers` (" +
+                        "`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
+                        "  `title` varchar(100) NOT NULL," +
+                        "  `description` varchar(255) DEFAULT NULL," +
+                        "  `teamID` bigint(20) unsigned DEFAULT NULL," +
+                        "  `creator` bigint(20) unsigned NOT NULL," +
+                        "  `latitude` double PRECISION NOT NULL," +
+                        "  `longitude` double PRECISION NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  KEY `tacticalPin_teams_FK` (`teamID`)," +
+                        "  KEY `tacticalPin_user_FK` (`creator`)," +
+                        "  CONSTRAINT `tacticalPin_teams_FK` FOREIGN KEY (`teamID`) REFERENCES `teams` (`id`)," +
+                        "  CONSTRAINT `tacticalPin_user_FK` FOREIGN KEY (`creator`) REFERENCES `users` (`id`)" +
                         ");").execute();
                 consumer.accept(null);
             } catch (final SQLException ex) {
@@ -258,6 +276,107 @@ public class SQLUser {
             }
         });
     }
+
+    public void createMissionMarkerTable(final Consumer<Void> consumer) {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `missionMarkers` (" +
+                        "`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
+                        "  `title` varchar(100) NOT NULL," +
+                        "  `description` varchar(255) DEFAULT NULL," +
+                        "  `creator` bigint(20) unsigned NOT NULL," +
+                        "  `latitude` double PRECISION NOT NULL," +
+                        "  `longitude` double PRECISION NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  KEY `missionPin_user_FK` (`creator`)," +
+                        "  CONSTRAINT `missionPin_user_FK` FOREIGN KEY (`creator`) REFERENCES `users` (`id`)" +
+                        ");").execute();
+                consumer.accept(null);
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
+    public void createRespawnMarkerTable(final Consumer<Void> consumer) {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `respawnMarkers` (" +
+                        "`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
+                        "  `title` varchar(100) NOT NULL," +
+                        "  `description` varchar(255) DEFAULT NULL," +
+                        "  `creator` bigint(20) unsigned NOT NULL," +
+                        "  `latitude` double PRECISION NOT NULL," +
+                        "  `longitude` double PRECISION NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  KEY `respawnPin_user_FK` (`creator`)," +
+                        "  CONSTRAINT `respawnPin_user_FK` FOREIGN KEY (`creator`) REFERENCES `users` (`id`)" +
+                        ");").execute();
+                consumer.accept(null);
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
+    public void createHQMarkerTable(final Consumer<Void> consumer) {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `hqMarkers` (" +
+                        "`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
+                        "  `title` varchar(100) NOT NULL," +
+                        "  `description` varchar(255) DEFAULT NULL," +
+                        "  `creator` bigint(20) unsigned NOT NULL," +
+                        "  `latitude` double PRECISION NOT NULL," +
+                        "  `longitude` double PRECISION NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  KEY `hqPin_user_FK` (`creator`)," +
+                        "  CONSTRAINT `hqPin_user_FK` FOREIGN KEY (`creator`) REFERENCES `users` (`id`)" +
+                        ");").execute();
+                consumer.accept(null);
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
+    public void createFlagMarkerTable(final Consumer<Void> consumer) {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS `flagMarkers` (" +
+                        "`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
+                        "  `title` varchar(100) NOT NULL," +
+                        "  `description` varchar(255) DEFAULT NULL," +
+                        "  `creator` bigint(20) unsigned NOT NULL," +
+                        "  `latitude` double PRECISION NOT NULL," +
+                        "  `longitude` double PRECISION NOT NULL," +
+                        "  PRIMARY KEY (`id`)," +
+                        "  KEY `flagPin_user_FK` (`creator`)," +
+                        "  CONSTRAINT `flagPin_user_FK` FOREIGN KEY (`creator`) REFERENCES `users` (`id`)" +
+                        ");").execute();
+                consumer.accept(null);
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
 
     public void createTeamsTable(final Consumer<Void> consumer) {
         renewConnection();
@@ -267,6 +386,7 @@ public class SQLUser {
                 conn.prepareStatement("CREATE TABLE IF NOT EXISTS `teams` (" +
                         "  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT," +
                         "  `teamname` varchar(100) NOT NULL," +
+                        "UNIQUE KEY `teams_UN` (`teamname`),"+
                         "  PRIMARY KEY (`id`));").execute();
                 ResultSet resultSet = conn.prepareStatement("SELECT * FROM `teams`").executeQuery();
                 if (!resultSet.next())
@@ -288,7 +408,7 @@ public class SQLUser {
                 //TODO: FIX SQL QUERY
                 ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, " +
                         "userID, latitude, longitude, username, alive, underfire, mission, support, teamid, teamname " +
-                        "FROM `teams` inner join (`position` inner join `user`) WHERE online=true group by `userID`").executeQuery();
+                        "FROM `teams` inner join (`positions` inner join `users`) WHERE online=true group by `userID`").executeQuery();
 
                 JsonObject jsonObject = null;
                 while (resultSet.next()) {
@@ -319,13 +439,113 @@ public class SQLUser {
 
     }
 
-    private JsonArray getPositionHistoryFromAllUSer() {
+    public void addTacticalMarker(double latitude, double longitude, String teamname, String title, String description, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `tacticalMarkers` (latitude, longitude, teamID, title, description, creator) VALUES (?, ?, (SELECT teamname from `teams` WHERE id=?), ?, ?,(SELECT id from `users` WHERE username=?));");
+                preparedStatement.setDouble(1, latitude);
+                preparedStatement.setDouble(2, longitude);
+                preparedStatement.setString(3, teamname);
+                preparedStatement.setString(4, title);
+                preparedStatement.setString(5, description);
+                preparedStatement.setString(6, username);
+                preparedStatement.execute();
+                System.out.println("asodasdasd");
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+    public void addMissionMarker(double latitude, double longitude, String title, String description, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `missionMarkers` (latitude, longitude, title, description, creator) VALUES (?, ?, ?, ?,(SELECT id from `users` WHERE username=?));");
+                preparedStatement.setDouble(1, latitude);
+                preparedStatement.setDouble(2, longitude);
+                preparedStatement.setString(3, title);
+                preparedStatement.setString(4, description);
+                preparedStatement.setString(5, username);
+                preparedStatement.execute();
+                System.out.println("asodasdasd");
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+    public void addRespawnMarker(double latitude, double longitude, String title, String description, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `respawnMarkers` (latitude, longitude, title, description, creator) VALUES (?, ?, ?, ?,(SELECT id from `users` WHERE username=?));");
+                preparedStatement.setDouble(1, latitude);
+                preparedStatement.setDouble(2, longitude);
+                preparedStatement.setString(3, title);
+                preparedStatement.setString(4, description);
+                preparedStatement.setString(5, username);
+                preparedStatement.execute();
+                System.out.println("asodasdasd");
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+    public void addHQMarker(double latitude, double longitude, String title, String description, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `hqMarkers` (latitude, longitude, title, description, creator) VALUES (?, ?, ?, ?,(SELECT id from `users` WHERE username=?));");
+                preparedStatement.setDouble(1, latitude);
+                preparedStatement.setDouble(2, longitude);
+                preparedStatement.setString(3, title);
+                preparedStatement.setString(4, description);
+                preparedStatement.setString(5, username);
+                preparedStatement.execute();
+                System.out.println("asodasdasd");
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+    //TODO: Welche Seite eingenommen
+    public void addFlagMarker(double latitude, double longitude, String title, String description, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `flagMarkers` (latitude, longitude, title, description, creator) VALUES (?, ?, ?, ?,(SELECT id from `users` WHERE username=?));");
+                preparedStatement.setDouble(1, latitude);
+                preparedStatement.setDouble(2, longitude);
+                preparedStatement.setString(3, title);
+                preparedStatement.setString(4, description);
+                preparedStatement.setString(5, username);
+                preparedStatement.execute();
+                System.out.println("asodasdasd");
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+
+
+
+    private JsonArray getPositionHistoryFromAllUser() {
         renewConnection();
         JsonArray jsonArray = new JsonArray();
         service.execute(() -> {
 
                     try {
-                        ResultSet resultSet = conn.prepareStatement("SELECT * FROM `user`").executeQuery();
+                        ResultSet resultSet = conn.prepareStatement("SELECT * FROM `users`").executeQuery();
 
                         ArrayList<Long> userIDs = new ArrayList<Long>();
                         while (resultSet.next()) {
@@ -333,7 +553,7 @@ public class SQLUser {
                         }
                         for (long userID : userIDs) {
                             JsonObject userJsonObject = new JsonObject();
-                            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT latitude, longitde, timestamp FROM `position` where userID = ?");
+                            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT latitude, longitde, timestamp FROM `positions` where userID = ?");
                             preparedStatement.setLong(1, userID);
                             resultSet = preparedStatement.executeQuery();
                             userJsonObject.addProperty("latitude", resultSet.getLong("latitude"));
@@ -356,7 +576,7 @@ public class SQLUser {
         renewConnection();
         service.execute(() -> {
             try {
-                PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM `user` where username = ?");
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM `users` where username = ?");
                 preparedStatement.setString(1, username);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 int userID;
@@ -366,7 +586,7 @@ public class SQLUser {
                     throw new SQLException();
                 }
 
-                preparedStatement = conn.prepareStatement("UPDATE `user` SET alive = ?, underfire = ?, mission = ?, support = ? WHERE id = ? ");
+                preparedStatement = conn.prepareStatement("UPDATE `users` SET alive = ?, underfire = ?, mission = ?, support = ? WHERE id = ? ");
                 preparedStatement.setBoolean(1, alive);
                 preparedStatement.setBoolean(2, underfire);
                 preparedStatement.setBoolean(3, mission);
@@ -385,7 +605,7 @@ public class SQLUser {
         renewConnection();
         service.execute(() -> {
             try {
-                PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `orga` (userID, tacticalPin, missionPin, hqPin, respawnPin) VALUES ((SELECT id FROM `user` where username = ?), ?, ?, ?, ?");
+                PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO `orga` (userID, tacticalPin, missionPin, hqPin, respawnPin) VALUES ((SELECT id FROM `users` where username = ?), ?, ?, ?, ?");
                 preparedStatement.setString(1, username);
                 preparedStatement.setBoolean(2, tacticalPin);
                 preparedStatement.setBoolean(3, missionPin);
@@ -406,7 +626,7 @@ public class SQLUser {
         renewConnection();
         service.execute(() -> {
             try{
-                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM TABLE `orga` WHERE userID = (SELECT id FROM `user` where username = ?);");
+                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM TABLE `orga` WHERE userID = (SELECT id FROM `users` where username = ?);");
                 preparedStatement.setString(1, username);
                 preparedStatement.execute();
                 consumer.accept(true);

@@ -21,6 +21,7 @@ import netty.utils.Authenticated;
 import netty.utils.Logger;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class NettyServer {
@@ -82,9 +83,8 @@ public class NettyServer {
                 }
                 System.out.println("Enter commands:");
             }
-        } catch (Exception ignored) {
+        } catch (IOException ignored) {
         }
-
         return this;
     }
 
@@ -100,8 +100,16 @@ public class NettyServer {
             sqlUser.createUserTable(aVoid1 -> {
                 sqlUser.createPositionTable(aVoid2 -> {
                     sqlUser.createOrgaTable(aVoid3 -> {
-                        sqlUser.createTacticalPinTable(aVoid4 -> {
-                            Logger.info("§eTables successfully created!");
+                        sqlUser.createTacticalMarkerTable(aVoid4 -> {
+                            sqlUser.createMissionMarkerTable(aVoid5 -> {
+                                sqlUser.createRespawnMarkerTable(aVoid6 -> {
+                                    sqlUser.createHQMarkerTable(aVoid7 -> {
+                                        sqlUser.createFlagMarkerTable(aVoid8 -> {
+                                            Logger.info("§eTables successfully created!");
+                                        });
+                                    });
+                                });
+                            });
                         });
                     });
                 });
