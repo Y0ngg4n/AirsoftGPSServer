@@ -27,6 +27,6 @@ public class AddRespawnMarkerOUT implements PacketOUT {
 
     @Override
     public int getId() {
-        return 0;
+        return 9;
     }
 }

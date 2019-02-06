@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="101cded9-6dcd-4a83-9b7d-822335c18ec4" name="Nexus" url="http://oblivioncoding.pro">
-        <fileTransfer host="oblivioncoding.pro" port="37225" privateKey="D:\ssh\yonggan.ppk" rootFolder="/home/yonggan" accessType="SFTP" keyPair="true">
+        <fileTransfer host="oblivioncoding.pro" port="37225" privateKey="C:\Users\aschuele\Documents\ssh\yonggan.ppk" rootFolder="/home/yonggan" accessType="SFTP" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

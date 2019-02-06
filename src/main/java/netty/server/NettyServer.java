@@ -1,6 +1,5 @@
 package netty.server;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;

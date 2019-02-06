@@ -11,7 +11,6 @@ import netty.packets.in.*;
 import netty.packets.out.*;
 import netty.utils.Authenticated;
 import netty.utils.Logger;
-import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,11 +95,14 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             AddTacticalMarkerIN addTacticalMarkerIN = (AddTacticalMarkerIN) packet;
             NettyServer.sqlUser.addTacticalMarker(addTacticalMarkerIN.getLatitude(), addTacticalMarkerIN.getLongitude(), addTacticalMarkerIN.getTeamname(), addTacticalMarkerIN.getTitle(), addTacticalMarkerIN.getDescription(), addTacticalMarkerIN.getUsername());
             Logger.debug("Add Tactical Marker");
-            final AddTacticalMarkerOUT addTacticalMarkerOUT = new AddTacticalMarkerOUT(addTacticalMarkerIN.getLatitude(), addTacticalMarkerIN.getLongitude(), addTacticalMarkerIN.getTeamname(), addTacticalMarkerIN.getTitle(), addTacticalMarkerIN.getDescription(), addTacticalMarkerIN.getUsername());
-            for (Channel channel1 : Authenticated.getChannels()) {
-                channel1.writeAndFlush(addTacticalMarkerOUT);
-                Logger.debug("AddTacticalMarkerOUT-Packet send to " + channel.id());
-            }
+//TODO: Fix the send of the jsonObject
+            NettyServer.sqlUser.getAllTacticalMarker(jsonArray -> {
+                final AddTacticalMarkerOUT addTacticalMarkerOUT = new AddTacticalMarkerOUT(jsonArray);
+                for (Channel channel1 : Authenticated.getChannels()) {
+                    channel1.writeAndFlush(addTacticalMarkerOUT);
+                    Logger.debug("AddTacticalMarkerOUT-Packet send to " + channel.id());
+                }
+            });
         } else if (packet instanceof AddMissionMarkerIN) {
             AddMissionMarkerIN addMissionMarkerIN = (AddMissionMarkerIN) packet;
             NettyServer.sqlUser.addMissionMarker(addMissionMarkerIN.getLatitude(), addMissionMarkerIN.getLongitude(), addMissionMarkerIN.getTitle(), addMissionMarkerIN.getDescription(), addMissionMarkerIN.getUsername());
@@ -123,7 +125,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             AddHQMarkerIN addHQMarkerIN = (AddHQMarkerIN) packet;
             NettyServer.sqlUser.addHQMarker(addHQMarkerIN.getLatitude(), addHQMarkerIN.getLongitude(), addHQMarkerIN.getTitle(), addHQMarkerIN.getDescription(), addHQMarkerIN.getUsername());
             Logger.debug("Add HQ Marker");
-            final AddHQMarkerOUT addHQMarkerOUT = new AddHQMarkerOUT(addHQMarkerIN.getLatitude(), addHQMarkerIN.getLongitude(), addHQMarkerIN.getTitle(), addHQMarkerIN.getDescription(),addHQMarkerIN.getUsername());
+            final AddHQMarkerOUT addHQMarkerOUT = new AddHQMarkerOUT(addHQMarkerIN.getLatitude(), addHQMarkerIN.getLongitude(), addHQMarkerIN.getTitle(), addHQMarkerIN.getDescription(), addHQMarkerIN.getUsername());
             for (Channel channel1 : Authenticated.getChannels()) {
                 channel1.writeAndFlush(addHQMarkerOUT);
                 Logger.debug("AddHQMarkerOUT-Packet send to " + channel.id());
