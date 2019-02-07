@@ -2,12 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57909a81-b0cf-414b-a0a5-5bcbf9654b57" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/webServers.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webServers.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/netty/packets/Authentification/SQLUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/netty/packets/Authentification/SQLUser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/netty/packets/PacketEncoder.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/netty/packets/PacketEncoder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/netty/packets/out/OrgaAuthOut.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/netty/packets/out/OrgaAuthOut.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/netty/server/NettyServer$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/netty/server/NettyServer$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/netty/server/NettyServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/netty/server/NettyServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/netty/server/NetworkHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/distributions/AirsoftGPSServer-1.0-SNAPSHOT.tar" beforeDir="false" afterPath="$PROJECT_DIR$/build/distributions/AirsoftGPSServer-1.0-SNAPSHOT.tar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/distributions/AirsoftGPSServer-1.0-SNAPSHOT.zip" beforeDir="false" afterPath="$PROJECT_DIR$/build/distributions/AirsoftGPSServer-1.0-SNAPSHOT.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libs/AirsoftGPSServer-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/AirsoftGPSServer-1.0-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/packets/out/AddRespawnMarkerOUT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/packets/out/AddRespawnMarkerOUT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/netty/packets/PacketEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/packets/PacketEncoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/packets/out/AddTacticalMarkerOUT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/packets/out/AddTacticalMarkerOUT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/netty/server/NettyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/server/NettyServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/netty/server/NetworkHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/netty/server/NetworkHandler.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -143,8 +157,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/netty/server/NetworkHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="98" selection-start-line="98" selection-end-line="98" />
+            <state relative-caret-position="230">
+              <caret line="76" column="79" selection-start-line="76" selection-start-column="79" selection-end-line="76" selection-end-column="79" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -155,7 +169,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/netty/server/NettyServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-832">
+            <state relative-caret-position="-512">
               <caret line="2" selection-start-line="2" selection-end-line="2" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -167,8 +181,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/AddRespawnMarkerOUT.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
-              <caret line="29" column="16" selection-start-line="29" selection-start-column="16" selection-end-line="29" selection-end-column="16" />
+            <state relative-caret-position="304">
+              <caret line="20" column="9" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="9" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="549" column="52" selection-start-line="549" selection-start-column="52" selection-end-line="549" selection-end-column="52" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -179,14 +205,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/AddTacticalMarkerOUT.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="256">
+              <caret line="25" column="40" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#274#275#0" expanded="true" />
-                <element signature="e#310#311#0" expanded="true" />
-                <element signature="e#406#407#0" expanded="true" />
-                <element signature="e#466#467#0" expanded="true" />
+                <element signature="e#479#480#0" expanded="true" />
                 <element signature="e#503#504#0" expanded="true" />
               </folding>
             </state>
@@ -194,72 +217,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/PacketDecoder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="520" column="6" selection-start-line="520" selection-start-column="6" selection-end-line="520" selection-end-column="6" />
+            <state relative-caret-position="141">
+              <caret line="17" column="72" selection-start-line="17" selection-start-column="65" selection-end-line="17" selection-end-column="72" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/AddTacticalMarkerIN.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/AddRespawnMarkerIN.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/AddFlagMarkerIN.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="39" column="5" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/AuthPacketIN.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#433#434#0" expanded="true" />
-                <element signature="e#464#465#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/PacketRegistry.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="13" column="50" selection-start-line="9" selection-start-column="4" selection-end-line="13" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -317,8 +281,6 @@
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/out/ServerShutdownPacketOUT.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/out/TextMessagePacketOUT.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/utils/ByteBuffers.java" />
-        <option value="$PROJECT_DIR$/src/main/java/netty/packets/PacketEncoder.java" />
-        <option value="$PROJECT_DIR$/src/main/java/netty/packets/PacketDecoder.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/utils/Logger.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/Authentification/User.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/Authentification/Authentificator.java" />
@@ -345,9 +307,11 @@
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/out/OrgaAuthOut.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/out/AddRespawnMarkerOUT.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/server/NettyServer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/netty/packets/PacketDecoder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/netty/packets/PacketEncoder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/netty/server/NetworkHandler.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java" />
         <option value="$PROJECT_DIR$/src/main/java/netty/packets/out/AddTacticalMarkerOUT.java" />
-        <option value="$PROJECT_DIR$/src/main/java/netty/server/NetworkHandler.java" />
       </list>
     </option>
   </component>
@@ -362,52 +326,45 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="build" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="build" type="462c0819:PsiDirectoryNode" />
               <item name="libs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
@@ -415,7 +372,7 @@
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
@@ -424,7 +381,7 @@
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
@@ -434,17 +391,7 @@
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="netty" type="462c0819:PsiDirectoryNode" />
-              <item name="packets" type="462c0819:PsiDirectoryNode" />
-              <item name="in" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AirsoftGPSServer" type="462c0819:PsiDirectoryNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
@@ -454,12 +401,23 @@
             </path>
             <path>
               <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AirsoftGPSServer" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="netty" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="AirsoftGPSServer" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -471,7 +429,7 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1549467326565" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1549553728850" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/build/libs" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -675,7 +633,8 @@
       <workItem from="1549353065147" duration="1452000" />
       <workItem from="1549355006500" duration="16720000" />
       <workItem from="1549380422157" duration="599000" />
-      <workItem from="1549437542820" duration="7649000" />
+      <workItem from="1549437542820" duration="7862000" />
+      <workItem from="1549545215802" duration="7123000" />
     </task>
     <task id="LOCAL-00001" summary="Customized Gradle for Build">
       <created>1548589385043</created>
@@ -726,11 +685,18 @@
       <option name="project" value="LOCAL" />
       <updated>1549380346141</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added JSONArray for TacticalMarkers">
+      <created>1549467529497</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1549467529497</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="215863000" />
+    <option name="totallyTimeSpent" value="223199000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -743,9 +709,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.1401919" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.14179105" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="3" />
@@ -754,11 +719,11 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329429" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.45879734" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.45879734" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39941263" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" visible="true" weight="0.32962137" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32887402" />
       <window_info anchor="bottom" id="Application Servers" order="7" />
       <window_info anchor="bottom" id="Profiler" order="8" />
       <window_info anchor="bottom" id="Changes" order="9" />
@@ -773,7 +738,7 @@
       <window_info anchor="bottom" id="Event Log" order="18" weight="0.5" />
       <window_info anchor="bottom" id="Floobits" order="19" />
       <window_info anchor="bottom" id="Tail" order="20" />
-      <window_info anchor="bottom" id="File Transfer" order="21" weight="0.16258352" />
+      <window_info anchor="bottom" id="File Transfer" order="21" weight="0.16164994" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -798,25 +763,14 @@
     <MESSAGE value="Added Status" />
     <MESSAGE value="Fixed SQL Query to get all Positions from Users" />
     <MESSAGE value="Added Tactical, Flag, HQ, Respawn, Mission-Marker Packets" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Tactical, Flag, HQ, Respawn, Mission-Marker Packets" />
+    <MESSAGE value="Added JSONArray for TacticalMarkers" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added JSONArray for TacticalMarkers" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/TextMessagePacketIN.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/utils/ByteBuffers.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/TextMessagePacketOUT.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/Authentification/BCrypt.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3">
@@ -830,16 +784,6 @@
     <entry file="jar://F:/Minecraft Server/Developer/JDK/src.zip!/java/util/function/Consumer.java" />
     <entry file="jar://F:/Minecraft Server/Developer/JDK/src.zip!/java/lang/Iterable.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/ClientAllPositionsHistoryOut.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/PacketEncoder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="14" column="29" lean-forward="true" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/concurrent/Future.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/concurrent/ExecutorService.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/function/Consumer.java" />
@@ -947,16 +891,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/PacketDecoder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="27" column="60" selection-start-line="27" selection-start-column="60" selection-end-line="27" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/netty/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="64">
@@ -978,16 +912,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
           <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/ClientAllPositionsOUT.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1107,10 +1031,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/OrgaAuthOut.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/AddTacticalMarkerIN.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="25" column="57" selection-start-line="25" selection-start-column="57" selection-end-line="25" selection-end-column="57" />
+        <state relative-caret-position="304">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/AddRespawnMarkerIN.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1146,30 +1080,71 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/AddRespawnMarkerIN.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/server/NettyServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        <state relative-caret-position="-512">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/in/AddTacticalMarkerIN.java">
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.1.32.Final/96a458beeb830f2da8baa6a482b6f01f0f8f9a2a/netty-all-4.1.32.Final-sources.jar!/io/netty/buffer/ByteBuf.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        <state relative-caret-position="297">
+          <caret line="266" column="60" selection-start-line="266" selection-start-column="60" selection-end-line="266" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/ClientAllPositionsOUT.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/OrgaAuthOut.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="520" column="6" selection-start-line="520" selection-start-column="6" selection-end-line="520" selection-end-column="6" />
+        <state relative-caret-position="384">
+          <caret line="25" column="57" selection-start-line="25" selection-start-column="57" selection-end-line="25" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.1.32.Final/96a458beeb830f2da8baa6a482b6f01f0f8f9a2a/netty-all-4.1.32.Final-sources.jar!/io/netty/handler/codec/ByteToMessageCodec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="139" column="74" selection-start-line="139" selection-start-column="74" selection-end-line="139" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/PacketDecoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="17" column="72" selection-start-line="17" selection-start-column="65" selection-end-line="17" selection-end-column="72" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.1.32.Final/96a458beeb830f2da8baa6a482b6f01f0f8f9a2a/netty-all-4.1.32.Final-sources.jar!/io/netty/handler/codec/MessageToByteEncoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1335">
+          <caret line="45" column="22" selection-start-line="45" selection-start-column="22" selection-end-line="45" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/PacketEncoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1178,18 +1153,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/AddRespawnMarkerOUT.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="29" column="16" selection-start-line="29" selection-start-column="16" selection-end-line="29" selection-end-column="16" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/netty/server/NettyServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-832">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        <state relative-caret-position="304">
+          <caret line="20" column="9" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1198,8 +1163,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/netty/server/NetworkHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="98" selection-start-line="98" selection-end-line="98" />
+        <state relative-caret-position="230">
+          <caret line="76" column="79" selection-start-line="76" selection-start-column="79" selection-end-line="76" selection-end-column="79" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/Authentification/SQLUser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="549" column="52" selection-start-line="549" selection-start-column="52" selection-end-line="549" selection-end-column="52" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1208,14 +1183,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/netty/packets/out/AddTacticalMarkerOUT.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="256">
+          <caret line="25" column="40" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#274#275#0" expanded="true" />
-            <element signature="e#310#311#0" expanded="true" />
-            <element signature="e#406#407#0" expanded="true" />
-            <element signature="e#466#467#0" expanded="true" />
+            <element signature="e#479#480#0" expanded="true" />
             <element signature="e#503#504#0" expanded="true" />
           </folding>
         </state>

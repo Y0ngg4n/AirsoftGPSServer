@@ -547,7 +547,7 @@ public class SQLUser {
                 JsonArray jsonArray = new JsonArray();
                 while (resultSet.next()){
                     JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("id",resultSet.getInt("id"));
+                    jsonObject.addProperty("markerID",resultSet.getInt("id"));
                     jsonObject.addProperty("title", resultSet.getString("title"));
                     jsonObject.addProperty("description", resultSet.getString("description"));
                     jsonObject.addProperty("teamname", resultSet.getString("teamname"));
@@ -561,6 +561,7 @@ public class SQLUser {
                 System.out.println("SQLException: " + e.getMessage());
                 System.out.println("SQLState: " + e.getSQLState());
                 System.out.println("VendorError: " + e.getErrorCode());
+                consumer.accept(null);
             }
         });
     }

@@ -1,6 +1,7 @@
 package netty.server;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -49,19 +50,39 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                     userMap.put(channel, user);
                     Authenticated.add(channel);
                     Logger.info("§eUser: §c" + user.getUsername() + "§e Loggte sich ein");
+                    //Send Orga Packet
                     NettyServer.sqlUser.isOrga(aBoolean1 -> {
                         if (aBoolean1.get(0)) {
                             ctx.writeAndFlush(new OrgaAuthOut(aBoolean1.get(0), aBoolean1.get(1), aBoolean1.get(2), aBoolean1.get(3), aBoolean1.get(4), aBoolean1.get(5)));
                             Logger.info("§eSending OrgaAuth-Packet to " + user.getUsername());
                         }
                     }, user.getUsername());
+                    //Set User Online
                     NettyServer.sqlUser.setOnlineUser(user.getUsername(), true);
+                    //Send All Positions out
                     NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
                         final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
                         for (Channel channel1 : Authenticated.getChannels()) {
                             channel1.writeAndFlush(clientAllPositionsOUT);
                             Logger.debug("Packets send to " + channel.id());
                             Logger.debug("ClientStatusIN " + String.valueOf(jsonArray));
+                        }
+                    });
+                    //Send all TacticalMarker
+                    NettyServer.sqlUser.getAllTacticalMarker(jsonArray -> {
+                        for(JsonElement jsonElement : jsonArray){
+                            final AddTacticalMarkerOUT addTacticalMarkerOUT = new AddTacticalMarkerOUT(
+                                    jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                                    jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                                    jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                                    jsonElement.getAsJsonObject().get("title").getAsString(),
+                                    jsonElement.getAsJsonObject().get("teamname").getAsString(),
+                                    jsonElement.getAsJsonObject().get("description").getAsString(),
+                                    jsonElement.getAsJsonObject().get("username").getAsString()
+                            );
+                            for (Channel channel1 : Authenticated.getChannels()) {
+                                channel1.writeAndFlush(addTacticalMarkerOUT);
+                            }
                         }
                     });
                 }
@@ -97,10 +118,21 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             Logger.debug("Add Tactical Marker");
 //TODO: Fix the send of the jsonObject
             NettyServer.sqlUser.getAllTacticalMarker(jsonArray -> {
-                final AddTacticalMarkerOUT addTacticalMarkerOUT = new AddTacticalMarkerOUT(jsonArray);
-                for (Channel channel1 : Authenticated.getChannels()) {
-                    channel1.writeAndFlush(addTacticalMarkerOUT);
-                    Logger.debug("AddTacticalMarkerOUT-Packet send to " + channel.id());
+                for(JsonElement jsonElement : jsonArray){
+                    final AddTacticalMarkerOUT addTacticalMarkerOUT = new AddTacticalMarkerOUT(
+                            jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                            jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                            jsonElement.getAsJsonObject().get("markerid").getAsInt(),
+                            jsonElement.getAsJsonObject().get("title").getAsString(),
+                            jsonElement.getAsJsonObject().get("teamname").getAsString(),
+                            jsonElement.getAsJsonObject().get("description").getAsString(),
+                            jsonElement.getAsJsonObject().get("username").getAsString()
+                    );
+                    for (Channel channel1 : Authenticated.getChannels()) {
+                        channel1.writeAndFlush(addTacticalMarkerOUT);
+                        Logger.debug("AddTacticalMarkerOUT-Packet send to " + channel.id());
+                        Logger.debug("AddTacticalMarkerOUT-Packet "+ jsonElement);
+                    }
                 }
             });
         } else if (packet instanceof AddMissionMarkerIN) {

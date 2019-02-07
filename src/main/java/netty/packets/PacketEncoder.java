@@ -10,6 +10,7 @@ public class PacketEncoder extends MessageToByteEncoder<PacketOUT> {
 
     @Override
     protected void encode(final ChannelHandlerContext ctx, final PacketOUT packet, final ByteBuf byteBuf) {
+        byteBuf.capacity(2048);
         byteBuf.writeInt(packet.getId());
         final JsonObject object = new JsonObject();
         packet.write(object);
