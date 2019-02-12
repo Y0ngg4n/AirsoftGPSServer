@@ -8,12 +8,15 @@ public class AddHQMarkerOUT implements PacketOUT {
 
     private String title, description, username;
 
-    public AddHQMarkerOUT(double latitude, double longitude, String title, String description, String username) {
+    private boolean own;
+
+    public AddHQMarkerOUT(double latitude, double longitude, String title, String description, String username, boolean own) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.title = title;
         this.description = description;
         this.username = username;
+        this.own = own;
     }
 
     @Override
@@ -23,6 +26,7 @@ public class AddHQMarkerOUT implements PacketOUT {
         jsonObject.addProperty("title", title);
         jsonObject.addProperty("description", description);
         jsonObject.addProperty("username", username);
+        jsonObject.addProperty("own", own);
     }
 
     @Override

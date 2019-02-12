@@ -6,8 +6,7 @@ import netty.packets.PacketIN;
 public class RefreshPacketIN implements PacketIN {
 
     @Override
-    public void read(JsonObject jsonObject) {
-    }
+    public void read(JsonObject jsonObject) {}
 
     @Override
     public int getId() {
