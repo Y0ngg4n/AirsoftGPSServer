@@ -1,17 +1,20 @@
 package netty.packets;
 
 import netty.packets.in.*;
+import netty.utils.Logger;
 
 public enum PacketRegistry {
     AuthIN(AuthPacketIN.class),
     ClientPositionIN(ClientPositionIN.class),
     ClientStatusUpdateIN(ClientStatusUpdateIN.class),
     ClientShutdownPacketIN(ClientShutdownPacketIN.class),
-    AddFlagMarkerIN(AddFlagMarkerIN.class),
-    AddHQMarkerIN(AddHQMarkerIN.class),
-    AddMissionMarkerIN(AddMissionMarkerIN.class),
-    AddRespawnMarkerIN(AddRespawnMarkerIN.class),
-    AddTacticalMarkerIN(AddTacticalMarkerIN.class);
+    AddFlagMarkerIN(netty.packets.in.AddMarker.AddFlagMarkerIN.class),
+    AddHQMarkerIN(netty.packets.in.AddMarker.AddHQMarkerIN.class),
+    AddMissionMarkerIN(netty.packets.in.AddMarker.AddMissionMarkerIN.class),
+    AddRespawnMarkerIN(netty.packets.in.AddMarker.AddRespawnMarkerIN.class),
+    AddTacticalMarkerIN(netty.packets.in.AddMarker.AddTacticalMarkerIN.class),
+    RefreshPacketIN(netty.packets.in.RefreshPacketIN.class),
+    RemoveTacticalMarkerIN(netty.packets.in.RemoveMarker.RemoveTacticalMarkerIN.class);
 
     private Class<? extends PacketIN> clazz;
 

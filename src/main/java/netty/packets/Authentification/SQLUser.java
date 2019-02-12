@@ -404,9 +404,23 @@ public class SQLUser {
         service.execute(() -> {
             try {
                 JsonArray jsonArray = new JsonArray();
-                ResultSet resultSet = conn.prepareStatement("select max(`timestamp`) as timestamp, " +
-                        "userID, latitude, longitude, username, alive, underfire, mission, support, teamid, teamname " +
-                        "FROM `teams` inner join (`positions` inner join `users`) WHERE online=true group by `userID`").executeQuery();
+                ResultSet resultSet = conn.prepareStatement("SELECT " +
+                        "p.latitude, " +
+                        "p.longitude, " +
+                        "p.`timestamp`, " +
+                        "u.id as userID, " +
+                        "u.username, " +
+                        "u.alive, " +
+                        "u.underfire, " +
+                        "u.mission, " +
+                        "u.support, " +
+                        "t.id as teamid, " +
+                        "t.teamname " +
+                        "FROM `users` u " +
+                        "JOIN `positions` p ON (u.id = p.userID) " +
+                        "LEFT OUTER JOIN `positions` p2 ON (u.id = p2.userID AND p2.`timestamp` > p.`timestamp`) " +
+                        "JOIN `teams` t ON (u.teamid = t.id) " +
+                        "WHERE p2.id IS NULL AND u.online;").executeQuery();
 
                 JsonObject jsonObject = null;
                 while (resultSet.next()) {
@@ -419,9 +433,9 @@ public class SQLUser {
                     jsonObject.addProperty("teamname", resultSet.getString("teamname"));
                     jsonObject.addProperty("teamid", resultSet.getString("teamid"));
                     jsonObject.addProperty("alive", resultSet.getBoolean("alive"));
-                    jsonObject.addProperty("underfire", resultSet.getString("underfire"));
-                    jsonObject.addProperty("mission", resultSet.getString("mission"));
-                    jsonObject.addProperty("support", resultSet.getString("support"));
+                    jsonObject.addProperty("underfire", resultSet.getBoolean("underfire"));
+                    jsonObject.addProperty("mission", resultSet.getBoolean("mission"));
+                    jsonObject.addProperty("support", resultSet.getBoolean("support"));
                     jsonArray.add(jsonObject);
                 }
                 Logger.debug("SQLUser: " + String.valueOf(jsonArray));
@@ -604,22 +618,12 @@ public class SQLUser {
         renewConnection();
         service.execute(() -> {
             try {
-                PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM `users` where username = ?");
-                preparedStatement.setString(1, username);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                int userID;
-                if (resultSet.next()) {
-                    userID = resultSet.getInt("id");
-                } else {
-                    throw new SQLException();
-                }
-
-                preparedStatement = conn.prepareStatement("UPDATE `users` SET alive = ?, underfire = ?, mission = ?, support = ? WHERE id = ? ");
+                PreparedStatement preparedStatement = conn.prepareStatement("UPDATE `users` SET alive = ?, underfire = ?, mission = ?, support = ? WHERE username = ? ");
                 preparedStatement.setBoolean(1, alive);
                 preparedStatement.setBoolean(2, underfire);
                 preparedStatement.setBoolean(3, mission);
                 preparedStatement.setBoolean(4, support);
-                preparedStatement.setInt(5, userID);
+                preparedStatement.setString(5, username);
                 preparedStatement.execute();
             } catch (SQLException e) {
                 System.out.println("SQLException: " + e.getMessage());
@@ -663,6 +667,23 @@ public class SQLUser {
                 System.out.println("SQLState: " + e.getSQLState());
                 System.out.println("VendorError: " + e.getErrorCode());
                 consumer.accept(false);
+            }
+        });
+    }
+
+    public void removeTacticalMarker(int markerID, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM `tacticalMarkers` WHERE id=? and creator=(SELECT id FROM `users` WHERE username=?)");
+                preparedStatement.setInt(1, markerID);
+                preparedStatement.setString(2, username);
+                preparedStatement.execute();
+                System.out.println("Reeeeeeempoooooved" + markerID);
+            }catch (SQLException e){
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
             }
         });
     }
