@@ -1,21 +1,15 @@
 package netty.packets.Authentification;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import netty.utils.Logger;
 
-import javax.security.auth.callback.Callback;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
@@ -648,8 +642,7 @@ public class SQLUser {
             }
         });
     }
-
-    public void getHQRespawnMarker(Consumer<JsonArray> consumer) {
+    public void getAllHQMarker(Consumer<JsonArray> consumer) {
         renewConnection();
         service.execute(() -> {
             try {
@@ -676,11 +669,11 @@ public class SQLUser {
         });
     }
 
-    public void getFlagRespawnMarker(Consumer<JsonArray> consumer) {
+    public void getAllFlagMarker(Consumer<JsonArray> consumer) {
         renewConnection();
         service.execute(() -> {
             try {
-                final ResultSet resultSet = conn.prepareStatement("SELECT * FROM `respawnMarkers`").executeQuery();
+                final ResultSet resultSet = conn.prepareStatement("SELECT * FROM `flagMarkers`").executeQuery();
                 JsonArray jsonArray = new JsonArray();
                 while (resultSet.next()){
                     JsonObject jsonObject = new JsonObject();

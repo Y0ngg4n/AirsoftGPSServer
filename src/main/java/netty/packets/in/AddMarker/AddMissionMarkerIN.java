@@ -34,6 +34,8 @@ public class AddMissionMarkerIN implements PacketIN {
         return latitude;
     }
 
+
+
     public String getDescription() {
         return description;
     }

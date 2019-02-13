@@ -8,9 +8,11 @@ public class AddMissionMarkerOUT implements PacketOUT {
 
     private String title, description, username;
 
-    public AddMissionMarkerOUT(double latitude, double longitude, String title, String description, String username) {
+    private int markerID;
+    public AddMissionMarkerOUT(double latitude, double longitude, int id, String title, String description, String username) {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.markerID = id;
         this.title = title;
         this.description = description;
         this.username = username;
@@ -20,6 +22,7 @@ public class AddMissionMarkerOUT implements PacketOUT {
     public void write(JsonObject jsonObject) {
         jsonObject.addProperty("latitude", latitude);
         jsonObject.addProperty("longitude", longitude);
+        jsonObject.addProperty("markerID", markerID);
         jsonObject.addProperty("title", title);
         jsonObject.addProperty("description", description);
         jsonObject.addProperty("username", username);

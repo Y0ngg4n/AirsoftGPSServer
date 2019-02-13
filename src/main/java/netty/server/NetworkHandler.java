@@ -88,38 +88,22 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             AddMissionMarkerIN addMissionMarkerIN = (AddMissionMarkerIN) packet;
             NettyServer.sqlUser.addMissionMarker(addMissionMarkerIN.getLatitude(), addMissionMarkerIN.getLongitude(), addMissionMarkerIN.getTitle(), addMissionMarkerIN.getDescription(), addMissionMarkerIN.getUsername());
             Logger.debug("Add Mission Marker");
-            final AddMissionMarkerOUT addMissionMarkerOUT = new AddMissionMarkerOUT(addMissionMarkerIN.getLatitude(), addMissionMarkerIN.getLongitude(), addMissionMarkerIN.getTitle(), addMissionMarkerIN.getDescription(), addMissionMarkerIN.getUsername());
-            for (Channel channel1 : Authenticated.getChannels()) {
-                channel1.writeAndFlush(addMissionMarkerOUT);
-                Logger.debug("AddMissionMarkerOUT-Packet send to " + channel.id());
-            }
+            sendMissionMarkers();
         } else if (packet instanceof AddRespawnMarkerIN) {
             AddRespawnMarkerIN addRespawnMarkerIN = (AddRespawnMarkerIN) packet;
             NettyServer.sqlUser.addRespawnMarker(addRespawnMarkerIN.getLatitude(), addRespawnMarkerIN.getLongitude(), addRespawnMarkerIN.getTitle(), addRespawnMarkerIN.getDescription(), addRespawnMarkerIN.getUsername());
             Logger.debug("Add Respawn Marker");
-            final AddRespawnMarkerOUT addRespawnMarkerOUT = new AddRespawnMarkerOUT(addRespawnMarkerIN.getLatitude(), addRespawnMarkerIN.getLongitude(), addRespawnMarkerIN.getTitle(), addRespawnMarkerIN.getDescription(), addRespawnMarkerIN.getUsername());
-            for (Channel channel1 : Authenticated.getChannels()) {
-                channel1.writeAndFlush(addRespawnMarkerOUT);
-                Logger.debug("AddRespawnMarkerOUT-Packet send to " + channel.id());
-            }
+            sendRespawnMarkers();
         } else if (packet instanceof AddHQMarkerIN) {
             AddHQMarkerIN addHQMarkerIN = (AddHQMarkerIN) packet;
             NettyServer.sqlUser.addHQMarker(addHQMarkerIN.getLatitude(), addHQMarkerIN.getLongitude(), addHQMarkerIN.getTitle(), addHQMarkerIN.getDescription(), addHQMarkerIN.getUsername());
             Logger.debug("Add HQ Marker");
-            final AddHQMarkerOUT addHQMarkerOUT = new AddHQMarkerOUT(addHQMarkerIN.getLatitude(), addHQMarkerIN.getLongitude(), addHQMarkerIN.getTitle(), addHQMarkerIN.getDescription(), addHQMarkerIN.getUsername());
-            for (Channel channel1 : Authenticated.getChannels()) {
-                channel1.writeAndFlush(addHQMarkerOUT);
-                Logger.debug("AddHQMarkerOUT-Packet send to " + channel.id());
-            }
+            sendHQMarkers();
         } else if (packet instanceof AddFlagMarkerIN) {
             AddFlagMarkerIN addFlagMarkerIN = (AddFlagMarkerIN) packet;
             NettyServer.sqlUser.addFlagMarker(addFlagMarkerIN.getLatitude(), addFlagMarkerIN.getLongitude(), addFlagMarkerIN.getTitle(), addFlagMarkerIN.getDescription(), addFlagMarkerIN.getUsername());
             Logger.debug("Add Flag Marker");
-            final AddFlagMarkerOUT addFlagMarkerOUT = new AddFlagMarkerOUT(addFlagMarkerIN.getLatitude(), addFlagMarkerIN.getLongitude(), addFlagMarkerIN.getTitle(), addFlagMarkerIN.getDescription(), addFlagMarkerIN.getUsername());
-            for (Channel channel1 : Authenticated.getChannels()) {
-                channel1.writeAndFlush(addFlagMarkerOUT);
-                Logger.debug("AddFlagMarkerOUT-Packet send to " + channel.id());
-            }
+            sendFlagMarkers();
         } else if (packet instanceof RemoveTacticalMarkerIN) {
             RemoveTacticalMarkerIN removeTacticalMarkerIN = (RemoveTacticalMarkerIN) packet;
             NettyServer.sqlUser.removeTacticalMarker(removeTacticalMarkerIN.getMarkerID(), removeTacticalMarkerIN.getUsername());
@@ -129,6 +113,10 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             sendLatestPositionMarkers(channel);
             sendStatusUpdateOUT(channel);
             sendTacticalMarkers(channel);
+            sendMissionMarkers(channel);
+            sendRespawnMarkers(channel);
+            sendHQMarkers(channel);
+            sendFlagMarkers(channel);
         }
     }
 
@@ -222,6 +210,164 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                 channel.writeAndFlush(addTacticalMarkerOUT);
                 Logger.debug("AddTacticalMarkerOUT-Packet send to " + channel.id());
                 Logger.debug("AddTacticalMarkerOUT-Packet " + jsonElement);
+            }
+        });
+    }
+
+    private void sendMissionMarkers() {
+        NettyServer.sqlUser.getAllMissionMarker(jsonArray -> {
+            for (JsonElement jsonElement : jsonArray) {
+                final AddMissionMarkerOUT addMissionMarkerOUT = new AddMissionMarkerOUT(
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("title").getAsString(),
+                        jsonElement.getAsJsonObject().get("description").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString()
+                );
+                for (Channel channel : Authenticated.getChannels()) {
+                    channel.writeAndFlush(addMissionMarkerOUT);
+                    Logger.debug("AddMissionMarkerOUT-Packet send to " + channel.id());
+                    Logger.debug("AddMissionMarkerOUT-Packet " + jsonElement);
+                }
+            }
+        });
+    }
+
+    private void sendMissionMarkers(Channel channel) {
+        NettyServer.sqlUser.getAllMissionMarker(jsonArray -> {
+            for (JsonElement jsonElement : jsonArray) {
+                final AddMissionMarkerOUT addMissionMarkerOUT = new AddMissionMarkerOUT(
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("title").getAsString(),
+                        jsonElement.getAsJsonObject().get("description").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString()
+                );
+                channel.writeAndFlush(addMissionMarkerOUT);
+                Logger.debug("AddMissionMarkerOUT-Packet send to " + channel.id());
+                Logger.debug("AddMissionMarkerOUT-Packet " + jsonElement);
+            }
+        });
+    }
+
+    private void sendRespawnMarkers() {
+        NettyServer.sqlUser.getAllRespawnMarker(jsonArray -> {
+            for (JsonElement jsonElement : jsonArray) {
+                final AddRespawnMarkerOUT addRespawnMarkerOUT = new AddRespawnMarkerOUT(
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("title").getAsString(),
+                        jsonElement.getAsJsonObject().get("description").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("own").getAsBoolean()
+                );
+                for (Channel channel : Authenticated.getChannels()) {
+                    channel.writeAndFlush(addRespawnMarkerOUT);
+                    Logger.debug("AddRespawnMarkerOUT-Packet send to " + channel.id());
+                    Logger.debug("AddRespawnMarkerOUT-Packet " + jsonElement);
+                }
+            }
+        });
+    }
+
+    private void sendRespawnMarkers(Channel channel) {
+        NettyServer.sqlUser.getAllRespawnMarker(jsonArray -> {
+            for (JsonElement jsonElement : jsonArray) {
+                final AddRespawnMarkerOUT addRespawnMarkerOUT = new AddRespawnMarkerOUT(
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("title").getAsString(),
+                        jsonElement.getAsJsonObject().get("description").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("own").getAsBoolean()
+                );
+                channel.writeAndFlush(addRespawnMarkerOUT);
+                Logger.debug("AddRespawnMarkerOUT-Packet send to " + channel.id());
+                Logger.debug("AddRespawnMarkerOUT-Packet " + jsonElement);
+            }
+        });
+    }
+
+    private void sendHQMarkers() {
+        NettyServer.sqlUser.getAllHQMarker(jsonArray -> {
+            for (JsonElement jsonElement : jsonArray) {
+                final AddHQMarkerOUT addHQMarkerOUT = new AddHQMarkerOUT(
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("title").getAsString(),
+                        jsonElement.getAsJsonObject().get("description").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("own").getAsBoolean()
+                );
+                for (Channel channel : Authenticated.getChannels()) {
+                    channel.writeAndFlush(addHQMarkerOUT);
+                    Logger.debug("AddHQMarkerOUT-Packet send to " + channel.id());
+                    Logger.debug("AddHQMarkerOUT-Packet " + jsonElement);
+                }
+            }
+        });
+    }
+
+    private void sendHQMarkers(Channel channel) {
+        NettyServer.sqlUser.getAllHQMarker(jsonArray -> {
+            for (JsonElement jsonElement : jsonArray) {
+                final AddHQMarkerOUT addHQMarkerOUT = new AddHQMarkerOUT(
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("title").getAsString(),
+                        jsonElement.getAsJsonObject().get("description").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("own").getAsBoolean()
+                );
+                channel.writeAndFlush(addHQMarkerOUT);
+                Logger.debug("AddHQMarkerOUT-Packet send to " + channel.id());
+                Logger.debug("AddHQMarkerOUT-Packet " + jsonElement);
+            }
+        });
+    }
+
+    private void sendFlagMarkers() {
+        NettyServer.sqlUser.getAllFlagMarker(jsonArray -> {
+            for (JsonElement jsonElement : jsonArray) {
+                final AddFlagMarkerOUT addFlagMarkerOUT = new AddFlagMarkerOUT(
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("title").getAsString(),
+                        jsonElement.getAsJsonObject().get("description").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("own").getAsBoolean()
+                );
+                for (Channel channel : Authenticated.getChannels()) {
+                    channel.writeAndFlush(addFlagMarkerOUT);
+                    Logger.debug("AddFlagMarkerOUT-Packet send to " + channel.id());
+                    Logger.debug("AddFlagMarkerOUT-Packet " + jsonElement);
+                }
+            }
+        });
+    }
+
+    private void sendFlagMarkers(Channel channel) {
+        NettyServer.sqlUser.getAllFlagMarker(jsonArray -> {
+            for (JsonElement jsonElement : jsonArray) {
+                final AddFlagMarkerOUT addFlagMarkerOUT = new AddFlagMarkerOUT(
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("markerID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("title").getAsString(),
+                        jsonElement.getAsJsonObject().get("description").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("own").getAsBoolean()
+                );
+                channel.writeAndFlush(addFlagMarkerOUT);
+                Logger.debug("AddFlagMarkerOUT-Packet send to " + channel.id());
+                Logger.debug("AddFlagMarkerOUT-Packet " + jsonElement);
             }
         });
     }
