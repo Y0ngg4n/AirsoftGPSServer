@@ -9,7 +9,7 @@ import netty.packets.Authentification.User;
 import netty.packets.PacketIN;
 import netty.packets.in.*;
 import netty.packets.in.AddMarker.*;
-import netty.packets.in.RemoveMarker.RemoveTacticalMarkerIN;
+import netty.packets.in.RemoveMarker.*;
 import netty.packets.out.*;
 import netty.packets.out.AddMarker.*;
 import netty.utils.Authenticated;
@@ -67,6 +67,10 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                     sendStatusUpdateOUT(channel);
                     //Send all TacticalMarker
                     sendTacticalMarkers(channel);
+                    sendMissionMarkers(channel);
+                    sendRespawnMarkers(channel);
+                    sendHQMarkers(channel);
+                    sendFlagMarkers(channel);
                 }
             }));
         } else if (packet instanceof ClientPositionIN) {
@@ -107,7 +111,23 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
         } else if (packet instanceof RemoveTacticalMarkerIN) {
             RemoveTacticalMarkerIN removeTacticalMarkerIN = (RemoveTacticalMarkerIN) packet;
             NettyServer.sqlUser.removeTacticalMarker(removeTacticalMarkerIN.getMarkerID(), removeTacticalMarkerIN.getUsername());
-            Logger.debug("Remove Tactical Marker");
+            Logger.debug("Removed Tactical Marker");
+        }else if (packet instanceof RemoveMissionMarkerIN) {
+            RemoveMissionMarkerIN removeMissionMarkerIN = (RemoveMissionMarkerIN) packet;
+            NettyServer.sqlUser.removeMissionMarker(removeMissionMarkerIN.getMarkerID(), removeMissionMarkerIN.getUsername());
+            Logger.debug("Removed Mission Marker");
+        }else if (packet instanceof RemoveRespawnMarkerIN) {
+            RemoveRespawnMarkerIN removeRespawnMarkerIN = (RemoveRespawnMarkerIN) packet;
+            NettyServer.sqlUser.removeRespawnMarker(removeRespawnMarkerIN.getMarkerID(), removeRespawnMarkerIN.getUsername());
+            Logger.debug("Removed Respawn Marker");
+        }else if (packet instanceof RemoveHQMarkerIN) {
+            RemoveHQMarkerIN removeHQMarkerIN = (RemoveHQMarkerIN) packet;
+            NettyServer.sqlUser.removeHQMarker(removeHQMarkerIN.getMarkerID(), removeHQMarkerIN.getUsername());
+            Logger.debug("Removed HQ Marker");
+        }else if (packet instanceof RemoveFlagMarkerIN) {
+            RemoveFlagMarkerIN removeFlagMarkerIN = (RemoveFlagMarkerIN) packet;
+            NettyServer.sqlUser.removeFlagMarker(removeFlagMarkerIN.getMarkerID(), removeFlagMarkerIN.getUsername());
+            Logger.debug("Removed Flag Marker");
         } else if (packet instanceof RefreshPacketIN) {
             Logger.debug("Refresh requested. Sending Packets...");
             sendLatestPositionMarkers(channel);
@@ -184,7 +204,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("teamname").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString()
+                        jsonElement.getAsJsonObject().get("creator").getAsString()
                 );
                 for (Channel channel : Authenticated.getChannels()) {
                     channel.writeAndFlush(addTacticalMarkerOUT);
@@ -205,7 +225,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("teamname").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString()
+                        jsonElement.getAsJsonObject().get("creator").getAsString()
                 );
                 channel.writeAndFlush(addTacticalMarkerOUT);
                 Logger.debug("AddTacticalMarkerOUT-Packet send to " + channel.id());
@@ -223,7 +243,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("markerID").getAsInt(),
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString()
+                        jsonElement.getAsJsonObject().get("creator").getAsString()
                 );
                 for (Channel channel : Authenticated.getChannels()) {
                     channel.writeAndFlush(addMissionMarkerOUT);
@@ -243,7 +263,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("markerID").getAsInt(),
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString()
+                        jsonElement.getAsJsonObject().get("creator").getAsString()
                 );
                 channel.writeAndFlush(addMissionMarkerOUT);
                 Logger.debug("AddMissionMarkerOUT-Packet send to " + channel.id());
@@ -261,7 +281,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("markerID").getAsInt(),
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("creator").getAsString(),
                         jsonElement.getAsJsonObject().get("own").getAsBoolean()
                 );
                 for (Channel channel : Authenticated.getChannels()) {
@@ -282,7 +302,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("markerID").getAsInt(),
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("creator").getAsString(),
                         jsonElement.getAsJsonObject().get("own").getAsBoolean()
                 );
                 channel.writeAndFlush(addRespawnMarkerOUT);
@@ -301,7 +321,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("markerID").getAsInt(),
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("creator").getAsString(),
                         jsonElement.getAsJsonObject().get("own").getAsBoolean()
                 );
                 for (Channel channel : Authenticated.getChannels()) {
@@ -322,7 +342,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("markerID").getAsInt(),
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("creator").getAsString(),
                         jsonElement.getAsJsonObject().get("own").getAsBoolean()
                 );
                 channel.writeAndFlush(addHQMarkerOUT);
@@ -341,7 +361,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("markerID").getAsInt(),
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("creator").getAsString(),
                         jsonElement.getAsJsonObject().get("own").getAsBoolean()
                 );
                 for (Channel channel : Authenticated.getChannels()) {
@@ -362,7 +382,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                         jsonElement.getAsJsonObject().get("markerID").getAsInt(),
                         jsonElement.getAsJsonObject().get("title").getAsString(),
                         jsonElement.getAsJsonObject().get("description").getAsString(),
-                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("creator").getAsString(),
                         jsonElement.getAsJsonObject().get("own").getAsBoolean()
                 );
                 channel.writeAndFlush(addFlagMarkerOUT);

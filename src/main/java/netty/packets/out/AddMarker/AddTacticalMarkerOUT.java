@@ -9,16 +9,16 @@ public class AddTacticalMarkerOUT implements PacketOUT {
 
     private double latitude, longitude;
 
-    private String teamname, title, description, username;
+    private String teamname, title, description, creator;
 
-    public AddTacticalMarkerOUT(double latitude, double longitude, int id,  String title, String teamname, String description, String username) {
+    public AddTacticalMarkerOUT(double latitude, double longitude, int id,  String title, String teamname, String description, String creator) {
         this.markerID = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.teamname = teamname;
         this.title = title;
         this.description = description;
-        this.username = username;
+        this.creator = creator;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class AddTacticalMarkerOUT implements PacketOUT {
         jsonObject.addProperty("teamname", teamname);
         jsonObject.addProperty("title", title);
         jsonObject.addProperty("description", description);
-        jsonObject.addProperty("username", username);
+        jsonObject.addProperty("creator", creator);
     }
 
     @Override

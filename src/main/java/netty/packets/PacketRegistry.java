@@ -14,7 +14,11 @@ public enum PacketRegistry {
     AddRespawnMarkerIN(netty.packets.in.AddMarker.AddRespawnMarkerIN.class),
     AddTacticalMarkerIN(netty.packets.in.AddMarker.AddTacticalMarkerIN.class),
     RefreshPacketIN(netty.packets.in.RefreshPacketIN.class),
-    RemoveTacticalMarkerIN(netty.packets.in.RemoveMarker.RemoveTacticalMarkerIN.class);
+    RemoveTacticalMarkerIN(netty.packets.in.RemoveMarker.RemoveTacticalMarkerIN.class),
+    RemoveMissionMarkerIN(netty.packets.in.RemoveMarker.RemoveMissionMarkerIN.class),
+    RemoveRespawnMarkerIN(netty.packets.in.RemoveMarker.RemoveRespawnMarkerIN.class),
+    RemoveHQMarkerIN(netty.packets.in.RemoveMarker.RemoveHQMarkerIN.class),
+    RemoveFlagMarkerIN(netty.packets.in.RemoveMarker.RemoveFlagMarkerIN.class);
 
     private Class<? extends PacketIN> clazz;
 

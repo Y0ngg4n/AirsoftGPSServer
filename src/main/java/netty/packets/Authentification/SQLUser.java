@@ -575,7 +575,7 @@ public class SQLUser {
                     jsonObject.addProperty("title", resultSet.getString("title"));
                     jsonObject.addProperty("description", resultSet.getString("description"));
                     jsonObject.addProperty("teamname", resultSet.getString("teamname"));
-                    jsonObject.addProperty("username", resultSet.getString("username"));
+                    jsonObject.addProperty("creator", resultSet.getString("creator"));
                     jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
                     jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
                     jsonArray.add(jsonObject);
@@ -601,7 +601,7 @@ public class SQLUser {
                     jsonObject.addProperty("markerID",resultSet.getInt("id"));
                     jsonObject.addProperty("title", resultSet.getString("title"));
                     jsonObject.addProperty("description", resultSet.getString("description"));
-                    jsonObject.addProperty("username", resultSet.getString("username"));
+                    jsonObject.addProperty("creator", resultSet.getString("creator"));
                     jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
                     jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
                     jsonArray.add(jsonObject);
@@ -627,7 +627,7 @@ public class SQLUser {
                     jsonObject.addProperty("markerID",resultSet.getInt("id"));
                     jsonObject.addProperty("title", resultSet.getString("title"));
                     jsonObject.addProperty("description", resultSet.getString("description"));
-                    jsonObject.addProperty("username", resultSet.getString("username"));
+                    jsonObject.addProperty("creator", resultSet.getString("creator"));
                     jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
                     jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
                     jsonObject.addProperty("own", resultSet.getBoolean("own"));
@@ -653,7 +653,7 @@ public class SQLUser {
                     jsonObject.addProperty("markerID",resultSet.getInt("id"));
                     jsonObject.addProperty("title", resultSet.getString("title"));
                     jsonObject.addProperty("description", resultSet.getString("description"));
-                    jsonObject.addProperty("username", resultSet.getString("username"));
+                    jsonObject.addProperty("creator", resultSet.getString("creator"));
                     jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
                     jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
                     jsonObject.addProperty("own", resultSet.getBoolean("own"));
@@ -680,7 +680,7 @@ public class SQLUser {
                     jsonObject.addProperty("markerID",resultSet.getInt("id"));
                     jsonObject.addProperty("title", resultSet.getString("title"));
                     jsonObject.addProperty("description", resultSet.getString("description"));
-                    jsonObject.addProperty("username", resultSet.getString("username"));
+                    jsonObject.addProperty("creator", resultSet.getString("creator"));
                     jsonObject.addProperty("latitude", resultSet.getDouble("latitude"));
                     jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
                     jsonObject.addProperty("own", resultSet.getBoolean("own"));
@@ -705,7 +705,70 @@ public class SQLUser {
                 preparedStatement.setInt(1, markerID);
                 preparedStatement.setString(2, username);
                 preparedStatement.execute();
-                System.out.println("Reeeeeeempoooooved" + markerID);
+            }catch (SQLException e){
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+
+    public void removeMissionMarker(int markerID, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM `missionMarkers` WHERE id=? and creator=(SELECT id FROM `users` WHERE username=?)");
+                preparedStatement.setInt(1, markerID);
+                preparedStatement.setString(2, username);
+                preparedStatement.execute();
+            }catch (SQLException e){
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+
+    public void removeRespawnMarker(int markerID, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM `respawnMarkers` WHERE id=? and creator=(SELECT id FROM `users` WHERE username=?)");
+                preparedStatement.setInt(1, markerID);
+                preparedStatement.setString(2, username);
+                preparedStatement.execute();
+            }catch (SQLException e){
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+
+    public void removeHQMarker(int markerID, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM `hqMarkers` WHERE id=? and creator=(SELECT id FROM `users` WHERE username=?)");
+                preparedStatement.setInt(1, markerID);
+                preparedStatement.setString(2, username);
+                preparedStatement.execute();
+            }catch (SQLException e){
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+            }
+        });
+    }
+
+    public void removeFlagMarker(int markerID, String username){
+        renewConnection();
+        service.execute(()->{
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM `flagMarkers` WHERE id=? and creator=(SELECT id FROM `users` WHERE username=?)");
+                preparedStatement.setInt(1, markerID);
+                preparedStatement.setString(2, username);
+                preparedStatement.execute();
             }catch (SQLException e){
                 System.out.println("SQLException: " + e.getMessage());
                 System.out.println("SQLState: " + e.getSQLState());

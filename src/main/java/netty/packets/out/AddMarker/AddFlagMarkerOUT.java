@@ -7,19 +7,19 @@ public class AddFlagMarkerOUT implements PacketOUT {
 
     private double latitude, longitude;
 
-    private String title, description, username;
+    private String title, description, creator;
 
     private boolean own;
 
     private int markerID;
 
-    public AddFlagMarkerOUT(double latitude, double longitude, int id,String title, String description, String username, boolean own) {
+    public AddFlagMarkerOUT(double latitude, double longitude, int id,String title, String description, String creator, boolean own) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.markerID = id;
         this.title = title;
         this.description = description;
-        this.username = username;
+        this.creator = creator;
         this.own = own;
     }
 
@@ -30,7 +30,7 @@ public class AddFlagMarkerOUT implements PacketOUT {
         jsonObject.addProperty("markerID", markerID);
         jsonObject.addProperty("title", title);
         jsonObject.addProperty("description", description);
-        jsonObject.addProperty("username", username);
+        jsonObject.addProperty("creator", creator);
         jsonObject.addProperty("own", own);
     }
 
