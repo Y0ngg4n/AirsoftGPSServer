@@ -76,7 +76,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
         } else if (packet instanceof ClientPositionIN) {
             final ClientPositionIN clientPositionIN = (ClientPositionIN) packet;
             Logger.debug("Incoming Client Position: lat: " + clientPositionIN.getLatitude() + " long: " + clientPositionIN.getLongitude());
-            NettyServer.sqlUser.insertPositionIfChanged(clientPositionIN.getUsername(), clientPositionIN.getLatitude(), clientPositionIN.getLongitude());
+            NettyServer.sqlUser.insertOrUpdatePositionIfChanged(clientPositionIN.getUsername(), clientPositionIN.getLatitude(), clientPositionIN.getLongitude());
             sendLatestPositionMarkers();
         } else if (packet instanceof ClientStatusUpdateIN) {
             final ClientStatusUpdateIN clientStatusUpdateIN = (ClientStatusUpdateIN) packet;

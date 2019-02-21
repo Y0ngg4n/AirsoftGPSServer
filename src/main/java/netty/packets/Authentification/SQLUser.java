@@ -375,6 +375,40 @@ public class SQLUser {
         });
     }
 
+    public void insertOrUpdatePositionIfChanged(final String username, final double latitude, final double longitude) {
+        renewConnection();
+
+        service.execute(() -> {
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM `positions` WHERE userID = (SELECT id FROM `users` WHERE username = ?) ORDER BY timestamp DESC LIMIT 1;");
+                preparedStatement.setString(1, username);
+
+                final ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (!resultSet.next()) {
+                    preparedStatement = conn.prepareStatement("INSERT INTO `positions` (userID, latitude, longitude) VALUES ((SELECT id FROM `users` WHERE username = ?), ?, ?) ");
+                    preparedStatement.setString(1, username);
+                    preparedStatement.setDouble(2, latitude);
+                    preparedStatement.setDouble(3, longitude);
+                    preparedStatement.execute();
+                    return;
+                }else if((resultSet.getDouble("latitude") != latitude || resultSet.getDouble("longitude") != longitude)){
+                    preparedStatement = conn.prepareStatement("UPDATE `positions`  SET latitude=?, longitude=? WHERE userID=(SELECT id FROM `users` WHERE username = ?)");
+                    preparedStatement.setDouble(1, latitude);
+                    preparedStatement.setDouble(2, longitude);
+                    preparedStatement.setString(3, username);
+                    preparedStatement.execute();
+                }
+                resultSet.close();
+                preparedStatement.close();
+            } catch (final SQLException ex) {
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        });
+    }
+
     public void getLatestPositionFromAllUser(final Consumer<JsonArray> callback) {
         renewConnection();
         service.execute(() -> {
