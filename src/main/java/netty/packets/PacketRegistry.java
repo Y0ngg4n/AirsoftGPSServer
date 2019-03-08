@@ -1,6 +1,7 @@
 package netty.packets;
 
 import netty.packets.in.*;
+import netty.packets.in.UpdateMarker.UpdateFlagMarkerIN;
 import netty.utils.Logger;
 
 public enum PacketRegistry {
@@ -18,7 +19,8 @@ public enum PacketRegistry {
     RemoveMissionMarkerIN(netty.packets.in.RemoveMarker.RemoveMissionMarkerIN.class),
     RemoveRespawnMarkerIN(netty.packets.in.RemoveMarker.RemoveRespawnMarkerIN.class),
     RemoveHQMarkerIN(netty.packets.in.RemoveMarker.RemoveHQMarkerIN.class),
-    RemoveFlagMarkerIN(netty.packets.in.RemoveMarker.RemoveFlagMarkerIN.class);
+    RemoveFlagMarkerIN(netty.packets.in.RemoveMarker.RemoveFlagMarkerIN.class),
+    UpdateFlagMarkerIN(netty.packets.in.UpdateMarker.UpdateFlagMarkerIN.class);
 
     private Class<? extends PacketIN> clazz;
 

@@ -729,6 +729,26 @@ public class SQLUser {
             }
         });
     }
+//############################################# Update Marker ##########################################################
+
+    public void updateFlagMarker(Consumer<Void> consumer, int flagID, boolean isOwn){
+        renewConnection();
+        service.execute(()->{
+                try {
+                    PreparedStatement preparedStatement = conn.prepareStatement("UPDATE `flagMarkers` SET own=? WHERE id=?");
+                    preparedStatement.setBoolean(1, isOwn);
+                    preparedStatement.setInt(2, flagID);
+                    preparedStatement.execute();
+                    consumer.accept(null);
+                }  catch (SQLException e) {
+                    System.out.println("SQLException: " + e.getMessage());
+                    System.out.println("SQLState: " + e.getSQLState());
+                    System.out.println("VendorError: " + e.getErrorCode());
+                    consumer.accept(null);
+                }
+        });
+    }
+
 //############################################# Remove Marker ##########################################################
 
     public void removeTacticalMarker(int markerID, String username){
@@ -873,7 +893,7 @@ public class SQLUser {
                     booleans.add(resultSet.getBoolean("flagMarker"));
                     consumer.accept(booleans);
                 } else {
-                    booleans.add(true);
+                    booleans.add(false);
                     consumer.accept(booleans);
                 }
             } catch (SQLException ex) {

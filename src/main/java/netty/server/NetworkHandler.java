@@ -10,6 +10,7 @@ import netty.packets.PacketIN;
 import netty.packets.in.*;
 import netty.packets.in.AddMarker.*;
 import netty.packets.in.RemoveMarker.*;
+import netty.packets.in.UpdateMarker.UpdateFlagMarkerIN;
 import netty.packets.out.*;
 import netty.packets.out.AddMarker.*;
 import netty.utils.Authenticated;
@@ -112,22 +113,33 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             RemoveTacticalMarkerIN removeTacticalMarkerIN = (RemoveTacticalMarkerIN) packet;
             NettyServer.sqlUser.removeTacticalMarker(removeTacticalMarkerIN.getMarkerID(), removeTacticalMarkerIN.getUsername());
             Logger.debug("Removed Tactical Marker");
-        }else if (packet instanceof RemoveMissionMarkerIN) {
+            sendTacticalMarkers();
+        } else if (packet instanceof RemoveMissionMarkerIN) {
             RemoveMissionMarkerIN removeMissionMarkerIN = (RemoveMissionMarkerIN) packet;
             NettyServer.sqlUser.removeMissionMarker(removeMissionMarkerIN.getMarkerID(), removeMissionMarkerIN.getUsername());
             Logger.debug("Removed Mission Marker");
-        }else if (packet instanceof RemoveRespawnMarkerIN) {
+            sendMissionMarkers();
+        } else if (packet instanceof RemoveRespawnMarkerIN) {
             RemoveRespawnMarkerIN removeRespawnMarkerIN = (RemoveRespawnMarkerIN) packet;
             NettyServer.sqlUser.removeRespawnMarker(removeRespawnMarkerIN.getMarkerID(), removeRespawnMarkerIN.getUsername());
             Logger.debug("Removed Respawn Marker");
-        }else if (packet instanceof RemoveHQMarkerIN) {
+            sendRespawnMarkers();
+        } else if (packet instanceof RemoveHQMarkerIN) {
             RemoveHQMarkerIN removeHQMarkerIN = (RemoveHQMarkerIN) packet;
             NettyServer.sqlUser.removeHQMarker(removeHQMarkerIN.getMarkerID(), removeHQMarkerIN.getUsername());
             Logger.debug("Removed HQ Marker");
-        }else if (packet instanceof RemoveFlagMarkerIN) {
+            sendHQMarkers();
+        } else if (packet instanceof RemoveFlagMarkerIN) {
             RemoveFlagMarkerIN removeFlagMarkerIN = (RemoveFlagMarkerIN) packet;
             NettyServer.sqlUser.removeFlagMarker(removeFlagMarkerIN.getMarkerID(), removeFlagMarkerIN.getUsername());
             Logger.debug("Removed Flag Marker");
+            sendFlagMarkers();
+        } else if (packet instanceof UpdateFlagMarkerIN) {
+            UpdateFlagMarkerIN updateFlagMarkerIN = (UpdateFlagMarkerIN) packet;
+            NettyServer.sqlUser.updateFlagMarker(aVoid ->{
+                sendFlagMarkers();
+            }, updateFlagMarkerIN.getFlagID(), updateFlagMarkerIN.isOwn());
+
         } else if (packet instanceof RefreshPacketIN) {
             Logger.debug("Refresh requested. Sending Packets...");
             sendLatestPositionMarkers(channel);
