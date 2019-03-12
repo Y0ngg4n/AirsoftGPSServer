@@ -731,7 +731,7 @@ public class SQLUser {
     }
 //############################################# Update Marker ##########################################################
 
-    public void updateFlagMarker(Consumer<Void> consumer, int flagID, boolean isOwn){
+    public void updateFlagMarker(int flagID, boolean isOwn){
         renewConnection();
         service.execute(()->{
                 try {
@@ -739,12 +739,10 @@ public class SQLUser {
                     preparedStatement.setBoolean(1, isOwn);
                     preparedStatement.setInt(2, flagID);
                     preparedStatement.execute();
-                    consumer.accept(null);
                 }  catch (SQLException e) {
                     System.out.println("SQLException: " + e.getMessage());
                     System.out.println("SQLState: " + e.getSQLState());
                     System.out.println("VendorError: " + e.getErrorCode());
-                    consumer.accept(null);
                 }
         });
     }

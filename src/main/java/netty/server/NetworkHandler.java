@@ -136,9 +136,8 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             sendFlagMarkers();
         } else if (packet instanceof UpdateFlagMarkerIN) {
             UpdateFlagMarkerIN updateFlagMarkerIN = (UpdateFlagMarkerIN) packet;
-            NettyServer.sqlUser.updateFlagMarker(aVoid -> {
-                sendFlagMarkers();
-            }, updateFlagMarkerIN.getFlagID(), updateFlagMarkerIN.isOwn());
+            NettyServer.sqlUser.updateFlagMarker(updateFlagMarkerIN.getFlagID(), updateFlagMarkerIN.isOwn());
+            sendFlagMarkers();
 
         } else if (packet instanceof RefreshPacketIN) {
             Logger.debug("Refresh requested. Sending Packets...");
