@@ -441,7 +441,7 @@ public class SQLUser {
                     jsonObject.addProperty("longitude", resultSet.getDouble("longitude"));
                     jsonObject.addProperty("username", resultSet.getString("username"));
                     jsonObject.addProperty("teamname", resultSet.getString("teamname"));
-                    jsonObject.addProperty("teamid", resultSet.getString("teamid"));
+                    jsonObject.addProperty("teamid", resultSet.getInt("teamid"));
                     jsonObject.addProperty("alive", resultSet.getBoolean("alive"));
                     jsonObject.addProperty("underfire", resultSet.getBoolean("underfire"));
                     jsonObject.addProperty("mission", resultSet.getBoolean("mission"));

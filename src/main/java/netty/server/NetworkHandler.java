@@ -65,7 +65,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
                     //Send All Positions out
                     sendLatestPositionMarkers(channel);
                     //Send all Status out
-                    sendStatusUpdateOUT(channel);
+//                    sendLatestPositionMarkers(channel);
                     //Send all TacticalMarker
                     sendTacticalMarkers(channel);
                     sendMissionMarkers(channel);
@@ -83,7 +83,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             final ClientStatusUpdateIN clientStatusUpdateIN = (ClientStatusUpdateIN) packet;
             Logger.debug("Incoming Client Status: alive: " + clientStatusUpdateIN.getAlive() + " underfire: " + clientStatusUpdateIN.getUnderfire() + " mission: " + clientStatusUpdateIN.getMission() + " support: " + clientStatusUpdateIN.getSupport());
             NettyServer.sqlUser.updateUserStatus(clientStatusUpdateIN.getUsername(), clientStatusUpdateIN.getAlive(), clientStatusUpdateIN.getUnderfire(), clientStatusUpdateIN.getMission(), clientStatusUpdateIN.getSupport());
-            sendStatusUpdateOUT();
+            sendLatestPositionMarkers();
         } else if (packet instanceof AddTacticalMarkerIN) {
             AddTacticalMarkerIN addTacticalMarkerIN = (AddTacticalMarkerIN) packet;
             NettyServer.sqlUser.addTacticalMarker(addTacticalMarkerIN.getLatitude(), addTacticalMarkerIN.getLongitude(), addTacticalMarkerIN.getTeamname(), addTacticalMarkerIN.getTitle(), addTacticalMarkerIN.getDescription(), addTacticalMarkerIN.getUsername());
@@ -136,14 +136,14 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
             sendFlagMarkers();
         } else if (packet instanceof UpdateFlagMarkerIN) {
             UpdateFlagMarkerIN updateFlagMarkerIN = (UpdateFlagMarkerIN) packet;
-            NettyServer.sqlUser.updateFlagMarker(aVoid ->{
+            NettyServer.sqlUser.updateFlagMarker(aVoid -> {
                 sendFlagMarkers();
             }, updateFlagMarkerIN.getFlagID(), updateFlagMarkerIN.isOwn());
 
         } else if (packet instanceof RefreshPacketIN) {
             Logger.debug("Refresh requested. Sending Packets...");
             sendLatestPositionMarkers(channel);
-            sendStatusUpdateOUT(channel);
+//            sendStatusUpdateOUT(channel);
             sendTacticalMarkers(channel);
             sendMissionMarkers(channel);
             sendRespawnMarkers(channel);
@@ -168,10 +168,25 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
 
     private void sendLatestPositionMarkers() {
         NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
-            final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
-            for (Channel channel : Authenticated.getChannels()) {
-                channel.writeAndFlush(clientAllPositionsOUT);
-                Logger.debug("Packets send to " + channel.id());
+
+            for (JsonElement jsonElement : jsonArray) {
+                ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(
+                        jsonElement.getAsJsonObject().get("userID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("teamid").getAsInt(),
+                        jsonElement.getAsJsonObject().get("alive").getAsBoolean(),
+                        jsonElement.getAsJsonObject().get("underfire").getAsBoolean(),
+                        jsonElement.getAsJsonObject().get("mission").getAsBoolean(),
+                        jsonElement.getAsJsonObject().get("support").getAsBoolean(),
+                        jsonElement.getAsJsonObject().get("timestamp").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("teamname").getAsString(),
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble()
+                );
+                for (Channel channel : Authenticated.getChannels()) {
+                    channel.writeAndFlush(clientAllPositionsOUT);
+                    Logger.debug("Packets send to " + channel.id());
+                }
                 Logger.debug("ClientPositionIN " + String.valueOf(jsonArray));
             }
         });
@@ -179,30 +194,24 @@ public class NetworkHandler extends SimpleChannelInboundHandler<PacketIN> {
 
     private void sendLatestPositionMarkers(Channel channel) {
         NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
-            final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
-            channel.writeAndFlush(clientAllPositionsOUT);
+            for (JsonElement jsonElement : jsonArray) {
+                ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(
+                        jsonElement.getAsJsonObject().get("userID").getAsInt(),
+                        jsonElement.getAsJsonObject().get("teamid").getAsInt(),
+                        jsonElement.getAsJsonObject().get("alive").getAsBoolean(),
+                        jsonElement.getAsJsonObject().get("underfire").getAsBoolean(),
+                        jsonElement.getAsJsonObject().get("mission").getAsBoolean(),
+                        jsonElement.getAsJsonObject().get("support").getAsBoolean(),
+                        jsonElement.getAsJsonObject().get("timestamp").getAsString(),
+                        jsonElement.getAsJsonObject().get("username").getAsString(),
+                        jsonElement.getAsJsonObject().get("teamname").getAsString(),
+                        jsonElement.getAsJsonObject().get("latitude").getAsDouble(),
+                        jsonElement.getAsJsonObject().get("longitude").getAsDouble()
+                );
+                channel.writeAndFlush(channel);
+            }
             Logger.debug("Packets send to " + channel.id());
             Logger.debug("ClientPositionIN " + String.valueOf(jsonArray));
-        });
-    }
-
-    private void sendStatusUpdateOUT() {
-        NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
-            final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
-            for (Channel channel : Authenticated.getChannels()) {
-                channel.writeAndFlush(clientAllPositionsOUT);
-                Logger.debug("ClientStatusOUT-Packet send to " + channel.id());
-                Logger.debug("ClientStatusIN " + String.valueOf(jsonArray));
-            }
-        });
-    }
-
-    private void sendStatusUpdateOUT(Channel channel) {
-        NettyServer.sqlUser.getLatestPositionFromAllUser(jsonArray -> {
-            final ClientAllPositionsOUT clientAllPositionsOUT = new ClientAllPositionsOUT(jsonArray);
-            channel.writeAndFlush(clientAllPositionsOUT);
-            Logger.debug("ClientStatusOUT-Packet send to " + channel.id());
-            Logger.debug("ClientStatusIN " + String.valueOf(jsonArray));
         });
     }
 
